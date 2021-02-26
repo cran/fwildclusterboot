@@ -1,6 +1,6 @@
-bae5379d11b1eec0ca6ce8f9731725fd *DESCRIPTION
+30d595e97d5a193e27d595c768731be3 *DESCRIPTION
 a1c9b68721800004fdffc35145834920 *NAMESPACE
-22260a54303112060a555277417f519c *NEWS.md
+05fcf301e0491fe8e42b9f5bb92455fb *NEWS.md
 2fef71342e7ccfdd5894a70d6ed564da *R/RcppExports.R
 2b2ec06f28a019a40877686ba50d44c9 *R/boot_algo2.R
 cbc2d944cf150aa2d20d363e85d05903 *R/boottest_felm.R
@@ -18,13 +18,13 @@ a2ab170997eedb608c7a91b5d4fadc9b *R/methods.R
 d253cea298d5f40f8b7e654805ef3f6c *R/set_get_nthreads.R
 34f962894156cd43a834d968e6d17cbe *R/tidy_boottest.R
 210c4a0f301dc004dd55fc4ec17042fb *R/voters-data.R
-aa39a2e8c88a549542cac8c4d330b34a *README.md
-8c94a1f83bf4d1d1f418a1fadce40942 *build/vignette.rds
+ea8af54fb9875960080d50eda82db646 *README.md
+55bbf74c938e15b231095cc9c216e3c1 *build/vignette.rds
 c299622a0757afc833a0523f30c2bf62 *data/voters.RData
 fc5e66dbbb1b03cea08269bcd7fc8856 *inst/WORDLIST
 6af23a5eae66a38f19f8c6d8f1a5d746 *inst/doc/fwildclusterboot.R
 15b3874073d4f4d6279dfb5bb7bdbb86 *inst/doc/fwildclusterboot.Rmd
-4b653aa1dc01bd861893f2579bdee014 *inst/doc/fwildclusterboot.html
+b7043a390d7884c4ebeab4204fd98260 *inst/doc/fwildclusterboot.html
 57b3db5febf17e513aad8fefefe1deea *inst/tinytest/test_bootcluster.R
 e8e9e7895175bdd89da3a1c4e3838ac8 *inst/tinytest/test_crosstab.R
 a6ec275ec25b4b5db8daeaf335284ee1 *inst/tinytest/test_deterministic_alpha_beta0.R
@@ -32,7 +32,7 @@ a6ec275ec25b4b5db8daeaf335284ee1 *inst/tinytest/test_deterministic_alpha_beta0.R
 b5bfa36f721052e440570b43f01a5a5e *inst/tinytest/test_deterministic_weights.R
 7daf36970f758114fbad830ec25106f3 *inst/tinytest/test_error_warning.R
 b0179ab9554e7af040ff2cc7fdf63db4 *inst/tinytest/test_impose_null.R
-e104219029d34cb5bf49ab74d676e18b *inst/tinytest/test_nthreads.R
+4a7fd6c6d0f8c9db60c1f91727747e69 *inst/tinytest/test_nthreads.R
 05a955ee5c72bb0f7a182a998cd0edeb *inst/tinytest/test_p_val_type.R
 9ba919fcccf87b98ceefc866b4391cd9 *inst/tinytest/test_stata.R
 a90a6934da58711c8ce005ee69624a80 *inst/tinytest/test_tidy.R

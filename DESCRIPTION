@@ -1,8 +1,8 @@
 Package: fwildclusterboot
 Title: Fast Wild Cluster Bootstrap Inference for Linear Regression
         Models
-Version: 0.3.1
-Date: 2021-01-12
+Version: 0.3.2
+Date: 2021-02-26
 Authors@R: 
     c(
     person(given = "Alexander",
@@ -59,7 +59,7 @@ LinkingTo: Rcpp, RcppEigen
 VignetteBuilder: knitr
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2021-02-12 11:04:46 UTC; alexa
+Packaged: 2021-02-26 14:31:13 UTC; alexa
 Author: Alexander Fischer [aut, cre],
   David Roodman [aut],
   Achim Zeileis [ctb] (Author of included sandwich fragments),
@@ -69,4 +69,4 @@ Author: Alexander Fischer [aut, cre],
   Sebastian Krantz [ctb]
 Maintainer: Alexander Fischer <alexander-fischer1801@t-online.de>
 Repository: CRAN
-Date/Publication: 2021-02-16 09:10:09 UTC
+Date/Publication: 2021-02-26 15:10:05 UTC

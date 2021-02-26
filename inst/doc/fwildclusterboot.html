@@ -622,7 +622,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
 <span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt; </span></span>
 <span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt;        term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; 1 treatment    0.073     3.786   0.001    0.033     0.113</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; 1 treatment    0.073     3.786   0.001    0.033     0.114</span></span>
 <span id="cb5-17"><a href="#cb5-17"></a></span>
 <span id="cb5-18"><a href="#cb5-18"></a><span class="co"># summary via the modelsummary package</span></span>
 <span id="cb5-19"><a href="#cb5-19"></a><span class="kw">msummary</span>(<span class="kw">list</span>(boot_lm, boot_feols), </span>
@@ -657,10 +657,10 @@ treatment
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.033, 0.113]
+[0.033, 0.114]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.033, 0.113]
+[0.033, 0.112]
 </td>
 </tr>
 <tr>
@@ -751,7 +751,7 @@ Log.Lik.
 </table>
 <p>A <code>plot()</code> method allows the user to inspect the bootstrap t-statistics:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">plot</span>(boot_lm)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <!-- A note on the output in `tidy()` and `summary()`: -->
 <div id="multiway-clustering" class="section level2">
 <h2>Multiway Clustering</h2>
@@ -769,7 +769,7 @@ Log.Lik.
 <span id="cb7-11"><a href="#cb7-11"></a><span class="co">#&gt;  Number of Clusters: 40 20 251</span></span>
 <span id="cb7-12"><a href="#cb7-12"></a><span class="co">#&gt; </span></span>
 <span id="cb7-13"><a href="#cb7-13"></a><span class="co">#&gt;        term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a><span class="co">#&gt; 1 treatment    0.073     3.925   0.004    0.031     0.115</span></span></code></pre></div>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="co">#&gt; 1 treatment    0.073     3.925   0.005    0.031     0.115</span></span></code></pre></div>
 </div>
 <div id="choice-of-bootstrap-weights" class="section level2">
 <h2>Choice of Bootstrap Weights</h2>
@@ -807,20 +807,20 @@ Model 2
 treatment
 </td>
 <td style="text-align:center;">
-0.073 (0.005)
+0.073 (0.008)
 </td>
 <td style="text-align:center;">
-0.073 (0.004)
+0.073 (0.002)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.116]
+[0.030, 0.117]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.115]
+[0.031, 0.113]
 </td>
 </tr>
 <tr>
@@ -929,17 +929,17 @@ treatment
 0.073 (0.001)
 </td>
 <td style="text-align:center;">
-0.073 (0.001)
+0.073 (0.000)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.033, 0.113]
+[0.034, 0.113]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.039, 0.106]
+[0.040, 0.106]
 </td>
 </tr>
 <tr>
@@ -1058,7 +1058,7 @@ treatment
 [0.031, 0.110]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.027, 0.116]
+[0.026, 0.116]
 </td>
 </tr>
 <tr>
@@ -1203,10 +1203,10 @@ treatment
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.111]
+[0.032, 0.111]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.028, 0.117]
+[0.029, 0.117]
 </td>
 </tr>
 <tr>
