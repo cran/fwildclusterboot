@@ -25,7 +25,7 @@ boottest.felm <- function(object,
   #' bootstrap inference for objects of class felm by  implementing
   #' the fast wild bootstrap algorithm developed in Roodman et al., 2019.
   #' 
-  #' @param object An object of class fixest
+  #' @param object An object of class felm
   #' @param clustid A vector with the clusters
   #' @param param Character vector of length one. The name of the regression 
   #'        coefficient for which the hypothesis is to be tested
@@ -237,16 +237,6 @@ boottest.felm <- function(object,
     )
   }
 
-  # returns function
-  # function taken from the sandwich package' vcovBS.lm function
-  wild_draw_fun <- switch(type,
-    rademacher = function(n) sample(c(-1L, 1L), n, replace = TRUE),
-    mammen = function(n) sample(c(-1, 1) * (sqrt(5) + c(-1, 1)) / 2, n, replace = TRUE, prob = (sqrt(5) + c(1, -1)) / (2 * sqrt(5))),
-    norm = function(n) rnorm(n),
-    webb = function(n) sample(c(-sqrt((3:1) / 2), sqrt((1:3) / 2)), n, replace = TRUE),
-    wild_draw_fun
-  )
-
   # preprocess data: X, Y, weights, fixed effects
   preprocess <- preprocess2(object = object, 
                             cluster = clustid,
@@ -260,13 +250,14 @@ boottest.felm <- function(object,
   point_estimate <- object$coefficients[param, ]
 
   N_G_2 <- 2^length(unique(preprocess$bootcluster[, 1]))
-  if (type == "rademacher" & N_G_2 < B) {
-    warning(paste("There are only", N_G_2, "unique draws from the rademacher
-                  distribution for", length(unique(preprocess$bootcluster[, 1])),
-                  "clusters. Therefore, B = ", N_G_2, ". Consider using webb
-                  weights instead."),
-      call. = FALSE, 
-      noBreaks. = TRUE
+  if (type %in% c("rademacher", "mammen") & N_G_2 < B) {
+    warning(paste("There are only", N_G_2, "unique draws from the rademacher 
+                  distribution for",
+                  length(unique(preprocess$bootcluster[, 1])), 
+                  "clusters. Therefore, 
+                  B = ", N_G_2, " with full enumeration. Consider using webb weights instead."),
+            call. = FALSE, 
+            noBreaks. = TRUE
     )
     B <- N_G_2
   }
@@ -274,7 +265,6 @@ boottest.felm <- function(object,
 
   res <- boot_algo2(preprocess,
     boot_iter = B,
-    wild_draw_fun = wild_draw_fun,
     point_estimate = point_estimate,
     impose_null = impose_null,
     beta0 = beta0,
@@ -282,7 +272,8 @@ boottest.felm <- function(object,
     param = param,
     seed = seed,
     p_val_type = p_val_type, 
-    nthreads = nthreads
+    nthreads = nthreads, 
+    type = type
   )
 
 

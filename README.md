@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-<!-- [![packageversion](https://img.shields.io/badge/Package%20version-x86_64-w64-mingw32, x86_64, mingw32, x86_64, mingw32, , 4, 0.3, 2020, 10, 10, 79318, R, R version 4.0.3 (2020-10-10), Bunny-Wunnies Freak Out-orange.svg?style=flat-square)](commits/master) -->
+<!-- [![packageversion](https://img.shields.io/badge/Package%20version-x86_64-w64-mingw32, x86_64, mingw32, x86_64, mingw32, , 4, 0.4, 2021, 02, 15, 80002, R, R version 4.0.4 (2021-02-15), Lost Library Book-orange.svg?style=flat-square)](commits/master) -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
@@ -42,10 +42,6 @@ effects, restricted (WCR) and unrestricted (WCU) bootstrap inference and
 subcluster bootstrapping for few treated clusters [(MacKinnon & Webb,
 (2018))](https://academic.oup.com/ectj/article-abstract/21/2/114/5078969).
 
-For a quick introduction to the package’s key function, `boottest()`,
-please follow this
-[link](https://s3alfisc.github.io/fwildclusterboot/articles/fwildclusterboot.html).
-
 <!-- The following features will be added in the future:  -->
 
 <!-- * support for multivariate hypotheses  -->
@@ -80,17 +76,19 @@ summary(feols_boot)
 #> 1 treatment    0.079     4.123       0    0.039     0.118
 ```
 
+For a longer introduction to the package’s key function, `boottest()`,
+please follow this
+[link](https://s3alfisc.github.io/fwildclusterboot/articles/fwildclusterboot.html).
+
 ### Benchmarks
 
-Results of timing benchmarks of `boottest()`, with a sample of
-\(N = 50000\), \(k = 27\) and one fixed effect of 25 groups (10
+Results of timing benchmarks of `boottest()`, with a sample of N =
+50000, k = 19 covariates and one cluster of dimension N\_G (10
 iterations each).
 
-  - Benchmark with one cluster of dimension \(N_G = 40\)
-  - Benchmark two clusters of dimensions \(N_{G1}= 40\),
-    \(N_{G2} = 20\), \(N_{G12} = 800\)
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-![Benchmark](man/figures/bench_ggplot.png)
+<!-- ![Benchmark](man/figures/bench_ggplot.png) -->
 
 ### Installation
 
