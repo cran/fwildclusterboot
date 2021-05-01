@@ -201,9 +201,12 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   
         C <- eigenMapMatMult(as.matrix(K_a), v, nthreads)
         D <- eigenMapMatMult(as.matrix(K_b), v, nthreads)
+          
+        
         CC[[x]] <- colSums(C * C)
         DD[[x]] <- colSums(D * D)
         CD[[x]] <- colSums(C * D)
+        
       }
     } else if (!is.null(W)) {
       # project out fe
@@ -227,6 +230,7 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   
         C <- eigenMapMatMult(as.matrix(K_a), v, nthreads)
         D <- eigenMapMatMult(as.matrix(K_b), v, nthreads)
+          
         CC[[x]] <- colSums(C * C)
         DD[[x]] <- colSums(D * D)
         CD[[x]] <- colSums(C * D)

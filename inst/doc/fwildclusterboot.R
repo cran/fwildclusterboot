@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
 ## ----setup--------------------------------------------------------------------
 library(fwildclusterboot)
 
-## -----------------------------------------------------------------------------
+## ---- error = FALSE, warning = FALSE, message = FALSE-------------------------
 library(fixest)
 library(lfe)
 
@@ -145,8 +145,7 @@ boot_2var <- boottest(lm_fit,
 
 msummary(model = list(boot_min, boot_2var), 
          estimate = "{estimate} ({p.value})", 
-         statistic = "[{conf.low}, {conf.high}]", 
-         conf_int = 0.05)
+         statistic = "[{conf.low}, {conf.high}]")
 
 
 
@@ -161,10 +160,10 @@ boot_feols <- boottest(feols_fit,
                        B = 9999)
 
 
-## -----------------------------------------------------------------------------
-boot_feols <- boottest(feols_fit, 
-                       clustid = "group_id1", 
-                       param = "treatment", 
-                       B = 9999, 
-                       nthreads = 2)
+## ---- eval = FALSE------------------------------------------------------------
+#  boot_feols <- boottest(feols_fit,
+#                         clustid = "group_id1",
+#                         param = "treatment",
+#                         B = 9999,
+#                         nthreads = 2)
 
