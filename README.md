@@ -13,8 +13,10 @@ status](https://www.r-pkg.org/badges/version/fwildclusterboot)](https://CRAN.R-p
 [![R-CMD-check](https://github.com/s3alfisc/fwildclusterboot/workflows/R-CMD-check/badge.svg)](https://github.com/s3alfisc/fwildclusterboot/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/s3alfisc/fwildclusterboot/branch/master/graph/badge.svg)](https://codecov.io/gh/s3alfisc/fwildclusterboot?branch=master)
-<!-- [![minimal R version](https://img.shields.io/badge/R%3E%3D-4.0.0-6666ff.svg)](https://cran.r-project.org/) -->
+[![](http://cranlogs.r-pkg.org/badges/grand-total/fwildclusterboot?color=blue)](https://cran.r-project.org/package=fwildclusterboot)
+[![](http://cranlogs.r-pkg.org/badges/last-month/fwildclusterboot?color=green)](https://cran.r-project.org/package=fwildclusterboot)
 
+<!-- [![minimal R version](https://img.shields.io/badge/R%3E%3D-4.0.0-6666ff.svg)](https://cran.r-project.org/) -->
 <!-- badges: end -->
 
 The `fwildclusterboot` package is an R port of STATA’s
@@ -70,7 +72,7 @@ summary(feols_boot)
 #>  Number of Clusters: 40
 #> 
 #>        term estimate statistic p.value conf.low conf.high
-#> 1 treatment    0.079     4.123       0    0.039     0.119
+#> 1 treatment    0.079     4.123       0    0.039     0.118
 ```
 
 For a longer introduction to the package’s key function, `boottest()`,
