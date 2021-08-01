@@ -1,4 +1,9 @@
 if (requireNamespace("tinytest", quietly = TRUE)) {
-  tinytest::test_package("fwildclusterboot")
+  # run tests only if both lfe and fixest are installed
+  if(requireNamespace("lfe") && requireNamespace("fixest")){
+    library(lfe)
+    library(fixest)
+    tinytest::test_package("fwildclusterboot")
+  }
 }
 

@@ -38,20 +38,12 @@ The `fwildclusterboot` package consists of one key function, `boottest()`. It im
 To start, we create a random data set with two cluster variables (group_id1 \& group_id2), two fixed effects and a set of covariates. The `icc_` arguments control the cluster variable's intra-cluster correlation.
 
 ```{r, error = FALSE, warning = FALSE, message = FALSE}
-library(fixest)
-library(lfe)
 
 # load data set voters included in fwildclusterboot
 data(voters)
 
 # estimate the regression model via lm
 lm_fit <- lm(proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration , data = voters)
-
-# estimate the regression model via feols
-feols_fit <- feols(proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration , data = voters)
-
-# estimate the regression model via felm
-felm_fit <- felm(proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration , data = voters)
 
 # model with interaction
 lm_fit_interact <- lm(proposition_vote ~ treatment + ideology1 + log_income:Q1_immigration , data = voters)
@@ -68,31 +60,29 @@ The `boottest()` function has 4 required and several optional arguments. The req
 ```{r}
 # boottest on an object of type lm
 boot_lm <- boottest(lm_fit, clustid = "group_id1", param = "treatment", B = 9999)
-# boottest on an object of type fixest
-boot_feols <- boottest(feols_fit, clustid = "group_id1", param = "treatment", B = 9999)
-# boottest on an object of type felm
-boot_felm <- boottest(felm_fit, clustid = "group_id1", param = "treatment", B = 9999)
 ```
 
 To tests for an interaction, it is important to use the coefficient names that are internally created by the modeling function.
 
 ```{r}
-names(coef(lm_fit_interact))
+#names(coef(lm_fit_interact))
 boot_lm_interact <- boottest(lm_fit_interact, clustid = "group_id1", param = "log_income:Q1_immigration1", B = 9999)
 ```
 
 To access the estimation results, `boottest()` comes with `summary()`, `tidy()` and `glance()` methods. The `tidy()` method returns the estimation results in a data.frame. `summary()` returns  additional information on top of the test statistics reported by `tidy()`. The`glance()` method enables the use of output formatting tools from the `modelsummary` package.
 
 ```{r}
-library(modelsummary)
-
 # fwildclusterboot's internal summary() method
 summary(boot_lm)
 
-# summary via the modelsummary package
-msummary(list(boot_lm, boot_feols), 
-          estimate = "{estimate} ({p.value})", 
-         statistic = "[{conf.low}, {conf.high}]")
+if(requireNamespace("modelsummary")){
+  # summary via the modelsummary package
+  library(modelsummary)
+  msummary(list(boot_lm, boot_lm_interact), 
+            estimate = "{estimate} ({p.value})", 
+           statistic = "[{conf.low}, {conf.high}]")  
+}
+
 
 ```
 
@@ -132,10 +122,12 @@ boot_lm_webb <- boottest(lm_fit,
                     B = 999,
                     type = "webb")
 
-msummary(list(boot_lm_rade, boot_lm_webb), 
+if(requireNamespace("modelsummary")){
+  library(modelsummary)
+  msummary(list(boot_lm_rade, boot_lm_webb), 
           estimate = "{estimate} ({p.value})", 
          statistic = "[{conf.low}, {conf.high}]")
-
+}
 ```
 
 ## Other function arguments 
@@ -152,9 +144,12 @@ boot_lm_10 <- boottest(lm_fit,
                     param = "treatment", B = 9999, 
                     sign_level = 0.10)
 
-msummary(list(boot_lm_5, boot_lm_10), 
+if(requireNamespace("modelsummary")){
+  library(modelsummary)
+  msummary(list(boot_lm_5, boot_lm_10), 
           estimate = "{estimate} ({p.value})", 
          statistic = "[{conf.low}, {conf.high}]")
+}
 ```
 
 In the case of multiway clustering, the user might want to specify the bootstrap clustering level. By default, boottest chooses the clustering level with the highest number of clusters as `bootcluster = "max"`. Other choices are the minimum cluster, or independent clustering variables.  
@@ -172,9 +167,12 @@ boot_lm2 <- boottest(lm_fit,
                     B = 9999, 
                     bootcluster = "group_id1")
 
-msummary(list(boot_lm1, boot_lm2), 
+if(requireNamespace("modelsummary")){
+  library(modelsummary)
+  msummary(list(boot_lm1, boot_lm2), 
           estimate = "{estimate} ({p.value})", 
          statistic = "[{conf.low}, {conf.high}]")
+}
 ```
 
 ## Fixed Effects
@@ -183,23 +181,17 @@ Last, `boottest()` supports out-projection of fixed effects in the estimation st
 Within the bootstrap, the user can choose to project out *only one* fixed effect, which can be set via the `fe` function argument. All other fixed effects specified in either `felm()` or `feols()` are treated as sets of binary regressors.
 
 ```{r}
-# estimate the regression model via feols
-feols_fit <- feols(proposition_vote ~ treatment + ideology1 + log_income | Q1_immigration , data = voters)
 
-# estimate the regression model via felm
-felm_fit <- felm(proposition_vote ~ treatment + ideology1 + log_income | Q1_immigration , data = voters)
-
-boot_feols <- boottest(feols_fit, 
-                       clustid = "group_id1", 
-                       param = "treatment", 
-                       B = 9999, 
-                       fe = "Q1_immigration")
-
-boot_felm <- boottest(felm_fit, 
-                      clustid = "group_id1",
-                      param = "treatment", 
-                      B = 9999, 
-                      fe = "Q1_immigration")
+if(requireNamespace("fixest")){
+  # estimate the regression model via feols
+  library(fixest)
+  feols_fit <- feols(proposition_vote ~ treatment + ideology1 + log_income | Q1_immigration , data = voters)
+  boot_feols <- boottest(feols_fit, 
+                         clustid = "group_id1", 
+                         param = "treatment", 
+                         B = 9999, 
+                         fe = "Q1_immigration")
+}
 
 ```
 
@@ -225,10 +217,12 @@ boot_2var <- boottest(lm_fit,
                     B = 9999, 
                     bootcluster = c("group_id1", "Q1_immigration"))
 
-msummary(model = list(boot_min, boot_2var), 
+if(requireNamespace("modelsummary")){
+  library(modelsummary)
+  msummary(model = list(boot_min, boot_2var), 
          estimate = "{estimate} ({p.value})", 
          statistic = "[{conf.low}, {conf.high}]")
-
+}
 
 
 ```
@@ -240,9 +234,9 @@ If regression weights are specified in the estimation stage via `lm()`, `feols()
 
 ```{r}
 # regression with weights / WLS
-feols_fit <- feols(proposition_vote ~ treatment + ideology1 + log_income, weights = voters$weights, data = voters)
+lm_w_fit <- lm(proposition_vote ~ treatment + ideology1 + log_income, weights = voters$weights, data = voters)
 
-boot_feols <- boottest(feols_fit, 
+boot_w_lm <- boottest(lm_w_fit, 
                        clustid = "group_id1", 
                        param = "treatment", 
                        B = 9999)
@@ -256,7 +250,7 @@ A major bottleneck for the performance of `boottest()` is a large matrix multipl
 The number of threads can be specified via the `nthreads` argument of `boottest()`:
 
 ```{r, eval = FALSE}
-boot_feols <- boottest(feols_fit, 
+boot_lm <- boottest(lm_fit, 
                        clustid = "group_id1", 
                        param = "treatment", 
                        B = 9999, 
@@ -394,7 +388,7 @@ boot_feols <- boottest(feols_fit,
 
 ## Small Sample Corrections
 
-`boottest()` adjust standard errors in case of multiway clustering via the formula $N_{g} / (N_{g} - 1)$, where $N_g$ is the dimension of cluster g.  
+`boottest()` applies the small-sample correction $N_{g} / (N_{g} - 1)$, where $N_g$ is the dimension of cluster g.  
 
 ## Treatment of Invalid Test Statistics for multiway clustering
 
