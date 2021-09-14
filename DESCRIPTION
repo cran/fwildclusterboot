@@ -1,8 +1,8 @@
 Package: fwildclusterboot
 Title: Fast Wild Cluster Bootstrap Inference for Linear Regression
         Models
-Version: 0.3.6
-Date: 2021-08-01
+Version: 0.3.7
+Date: 2021-09-14
 Authors@R: 
     c(
     person(given = "Alexander",
@@ -50,8 +50,8 @@ BugReports: https://github.com/s3alfisc/fwildclusterboot/issues/
 License: GPL-3
 Imports: collapse, Formula, Rcpp, dreamerr, Matrix, Matrix.utils,
         generics, gtools
-Suggests: fixest, lfe, data.table, fabricatr, tinytest, covr, knitr,
-        rmarkdown, spelling, broom, modelsummary
+Suggests: fixest, lfe, plm, clusterSEs, data.table, fabricatr,
+        tinytest, covr, knitr, rmarkdown, spelling, broom, modelsummary
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
@@ -59,7 +59,7 @@ LinkingTo: Rcpp, RcppEigen
 VignetteBuilder: knitr
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2021-08-01 16:32:14 UTC; alexa
+Packaged: 2021-09-14 10:35:50 UTC; alexa
 Author: Alexander Fischer [aut, cre],
   David Roodman [aut],
   Achim Zeileis [ctb] (Author of included sandwich fragments),
@@ -69,4 +69,4 @@ Author: Alexander Fischer [aut, cre],
   Sebastian Krantz [ctb]
 Maintainer: Alexander Fischer <alexander-fischer1801@t-online.de>
 Repository: CRAN
-Date/Publication: 2021-08-01 23:10:07 UTC
+Date/Publication: 2021-09-14 11:10:02 UTC
