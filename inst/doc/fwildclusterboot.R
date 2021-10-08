@@ -28,8 +28,12 @@ boot_lm <- boottest(lm_fit, clustid = "group_id1", param = "treatment", B = 9999
 boot_lm_interact <- boottest(lm_fit_interact, clustid = "group_id1", param = "log_income:Q1_immigration1", B = 9999)
 
 ## -----------------------------------------------------------------------------
+boot_multi <- boottest(lm_fit, clustid = "group_id1", param = c("treatment", "ideology1"), R = c(0.6, 0.2), beta0 = 0.02, B = 9999)
+
+## -----------------------------------------------------------------------------
 # fwildclusterboot's internal summary() method
 summary(boot_lm)
+summary(boot_multi)
 
 if(requireNamespace("modelsummary")){
   # summary via the modelsummary package

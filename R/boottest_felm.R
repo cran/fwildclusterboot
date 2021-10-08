@@ -1,3 +1,153 @@
+#' Fast wild cluster bootstrap inference for object of class felm
+#' 
+#' `boottest.felm` is a S3 method that allows for fast wild cluster 
+#' bootstrap inference for objects of class felm by  implementing
+#' the fast wild bootstrap algorithm developed in Roodman et al., 2019.
+#' 
+#' @param object An object of class felm
+#' @param clustid A character vector containing the names of the cluster variables
+#' @param param A character vector of length one. The name of the regression
+#'        coefficient for which the hypothesis is to be tested
+#' @param B Integer. The number of bootstrap iterations. When the number of clusters is low, 
+#'        increasing B adds little additional runtime. 
+#' @param bootcluster A character vector. Specifies the bootstrap clustering variable or variables. If more
+#'        than one variable is specified, then bootstrapping is clustered by the intersections of
+#'        clustering implied by the listed variables. To mimic the behavior of stata's boottest command, 
+#'        the default is to cluster by the intersection of all the variables specified via the `clustid` argument, 
+#'        even though that is not necessarily recommended (see the paper by Roodman et al cited below, section 4.2). 
+#'        Other options include "min", where bootstrapping is clustered by the cluster variable with the fewest clusters.
+#' @param fe A character vector of length one which contains the name of the fixed effect to be projected
+#'        out in the bootstrap. Note: if regression weights are used, fe 
+#'        needs to be NULL.
+#' @param sign_level A numeric between 0 and 1 which sets the significance level 
+#'        of the inference procedure. E.g. sign_level = 0.05 
+#'        returns 0.95% confidence intervals. By default, sign_level = 0.05.
+#' @param conf_int A logical vector. If TRUE, boottest computes confidence 
+#'        intervals by p-value inversion. If FALSE, only the p-value is returned.
+#' @param seed An integer. Allows the user to set a random seed. If NULL, `boottest()` sets an
+#'        internal seed. Hence by default, calling `boottest()` multiple times on the same object will produce 
+#'        the same test statistics.
+#' @param R Hypothesis Vector giving linear combinations of coefficients. Must be either NULL or a vector of the same length as `param`. If NULL, a vector of ones of length param.
+#' @param beta0 A numeric. Shifts the null hypothesis 
+#'        H0: param = beta0 vs H1: param != beta0
+#' @param type character or function. The character string specifies the type
+#'        of boostrap to use: One of "rademacher", "mammen", "norm"
+#'        and "webb". Alternatively, type can be a function(n) for drawing 
+#'        wild bootstrap factors. "rademacher" by default.  
+#'        For the Rademacher and Mammen distribution, if the number of replications B exceeds 
+#'        the number of possible draw ombinations, 2^(#number of clusters), then `boottest()` 
+#'        will use each possible combination once (enumeration).
+#' @param impose_null Logical. Controls if the null hypothesis is imposed on
+#'        the bootstrap dgp or not. Null imposed `(WCR)` by default.
+#'        If FALSE, the null is not imposed `(WCU)`
+#' @param p_val_type Character vector of length 1. Type of p-value. 
+#'        By default "two-tailed". Other options include "equal-tailed", ">" and "<".
+#' @param tol Numeric vector of length 1. The desired accuracy 
+#'        (convergence tolerance) used in the root finding procedure to find the confidence interval.
+#'        1e-6 by default.
+#' @param maxiter Integer. Maximum number of iterations used in the root finding procedure to find the confidence interval.
+#'        10 by default.
+#' @param na_omit Logical. If TRUE, `boottest()` omits rows with missing 
+#'        variables in the cluster variable that have not previously been deleted
+#'        when fitting the regression object (e.g. if the cluster variable was not used 
+#'        when fitting the regression model).
+#' @param nthreads The number of threads. Can be: a) an integer lower than, 
+#'                 or equal to, the maximum number of threads; b) 0: meaning 
+#'                 all available threads will be used; c) a number strictly
+#'                 between 0 and 1 which represents the fraction of all threads 
+#'                 to use. The default is to use 1 core.
+#' @param ... Further arguments passed to or from other methods.
+#'
+#' @importFrom dreamerr check_arg validate_dots
+#' @return An object of class \code{boottest}
+#' 
+#' \item{p_val}{The bootstrap p-value.}
+#' \item{conf_int}{The bootstrap confidence interval.}
+#' \item{param}{The tested parameter.}
+#' \item{N}{Sample size. Might differ from the regression sample size if 
+#'      the cluster variables contain NA values.}
+#' \item{B}{Number of Bootstrap Iterations.}
+#' \item{clustid}{Names of the cluster Variables.}
+#' \item{N_G}{Dimension of the cluster variables as used in boottest.}
+#' \item{sign_level}{Significance level used in boottest.}
+#' \item{type}{Distribution of the bootstrap weights.}
+#' \item{p_test_vals}{All p-values calculated while calculating the confidence
+#'      interval.}
+#' \item{t_stat}{The original test statistics - either imposing the null or not - with small sample correction `G / (G-1)`.}
+#' \item{test_vals}{All t-statistics calculated while calculating the 
+#'       confidence interval.}
+#'  \item{t_boot}{All bootstrap t-statistics.}     
+#' \item{regression}{The regression object used in boottest.}
+#' \item{call}{Function call of boottest.}
+#' 
+#' @export
+#' @method boottest felm
+#' 
+#' @section Confidence Intervals:
+#' \code{boottest} computes confidence intervals by inverting p-values.
+#'       In practice, the following procedure is used:
+#' \itemize{
+#' \item Based on an initial guess for starting values, calculate p-values for
+#'       26 equal spaced points between the starting values.
+#' \item Out of the 26 calculated p-values, find the two pairs of values x 
+#'       for which the corresponding p-values px cross the significance level
+#'       sign_level.
+#' \item Feed the two pairs of x into an numerical root finding procedure and 
+#'       solve for the root. boottest currently relies on 
+#'       \code{stats::uniroot} and sets an absolute tolerance of 1e-06 and 
+#'       stops the procedure after 10 iterations.
+#' }
+#' @section Standard Errors:
+#' \code{boottest} does not calculate standard errors.
+#' @references Roodman et al., 2019, "Fast and wild: Bootstrap inference in 
+#'             STATA using boottest", The STATA Journal.
+#'             (\url{https://journals.sagepub.com/doi/full/10.1177/1536867X19830877})
+#' @references Cameron, A. Colin, Jonah B. Gelbach, and Douglas L. Miller. "Bootstrap-based improvements for inference with clustered errors." The Review of Economics and Statistics 90.3 (2008): 414-427.
+#' @references MacKinnon, James G., and Matthew D. Webb. "The wild bootstrap for few (treated) clusters." The Econometrics Journal 21.2 (2018): 114-135.
+#' @references MacKinnon, James. "Wild cluster bootstrap confidence intervals." L'Actualite economique 91.1-2 (2015): 11-33.             
+#' @references Webb, Matthew D. Reworking wild bootstrap based inference for clustered errors. No. 1315. Queen's Economics Department Working Paper, 2013.
+#' @examples 
+#' 
+#' if(requireNamespace("lfe")){
+#' library(fwildclusterboot)
+#' library(lfe)
+#' data(voters)
+#' felm_fit <- felm(proposition_vote ~ treatment + ideology1 + log_income
+#'            | Q1_immigration, 
+#'            data = voters)
+#' boot1 <- boottest(felm_fit, 
+#'                   B = 9999, 
+#'                   param = "treatment",
+#'                   clustid = "group_id1")
+#' boot2 <- boottest(felm_fit, 
+#'                   B = 9999, 
+#'                   param = "treatment", 
+#'                   clustid = c("group_id1", "group_id2"))
+#' boot3 <- boottest(felm_fit, 
+#'                   B = 9999, 
+#'                   param = "treatment", 
+#'                   clustid = c("group_id1", "group_id2"),
+#'                   fe = "Q1_immigration")
+#' boot4 <- boottest(felm_fit, 
+#'                   B = 999, 
+#'                   param = "treatment", 
+#'                   clustid = c("group_id1", "group_id2"),
+#'                   fe = "Q1_immigration", 
+#'                   sign_level = 0.2, 
+#'                   seed = 8,
+#'                   beta0 = 2)
+#' # test treatment + ideology1 = 2                   
+#' boot5 <- boottest(felm_fit, 
+#'                   B = 9999, 
+#'                   clustid = c("group_id1", "group_id2"),
+#'                   param = c("treatment", "ideology1"),
+#'                   R = c(1, 1), 
+#'                   beta0 = 2)
+#' summary(boot1)
+#' plot(boot1)
+#' }
+
+
 boottest.felm <- function(object,
                           # clustid,
                           param,
@@ -7,6 +157,7 @@ boottest.felm <- function(object,
                           fe = NULL,
                           conf_int = NULL,
                           seed = NULL,
+                          R = NULL,
                           beta0 = 0,
                           sign_level = NULL,
                           type = "rademacher",
@@ -18,154 +169,17 @@ boottest.felm <- function(object,
                           nthreads = getBoottest_nthreads(), 
                           ...) {
 
-
-  #' Fast wild cluster bootstrap inference for object of class felm
-  #' 
-  #' `boottest.felm` is a S3 method that allows for fast wild cluster 
-  #' bootstrap inference for objects of class felm by  implementing
-  #' the fast wild bootstrap algorithm developed in Roodman et al., 2019.
-  #' 
-  #' @param object An object of class felm
-  #' @param clustid A character vector containing the names of the cluster variables
-  #' @param param A character vector of length one. The name of the regression
-  #'        coefficient for which the hypothesis is to be tested
-  #' @param B Integer. The number of bootstrap iterations. When the number of clusters is low, 
-  #'        increasing B adds little additional runtime. 
-  #' @param bootcluster A character vector. Specifies the bootstrap clustering variable or variables. If more
-  #'        than one variable is specified, then bootstrapping is clustered by the intersections of
-  #'        clustering implied by the listed variables. To mimic the behavior of stata's boottest command, 
-  #'        the default is to cluster by the intersection of all the variables specified via the `clustid` argument, 
-  #'        even though that is not necessarily recommended (see the paper by Roodman et al cited below, section 4.2). 
-  #'        Other options include "min", where bootstrapping is clustered by the cluster variable with the fewest clusters.
-  #' @param fe A character vector of length one which contains the name of the fixed effect to be projected
-  #'        out in the bootstrap. Note: if regression weights are used, fe 
-  #'        needs to be NULL.
-  #' @param sign_level A numeric between 0 and 1 which sets the significance level 
-  #'        of the inference procedure. E.g. sign_level = 0.05 
-  #'        returns 0.95% confidence intervals. By default, sign_level = 0.05.
-  #' @param conf_int A logical vector. If TRUE, boottest computes confidence 
-  #'        intervals by p-value inversion. If FALSE, only the p-value is returned.
-  #' @param seed An integer. Allows the user to set a random seed. If NULL, `boottest()` sets an
-  #'        internal seed. Hence by default, calling `boottest()` multiple times on the same object will produce 
-  #'        the same test statistics.
-  #' @param beta0 A numeric. Shifts the null hypothesis 
-  #'        H0: param = beta0 vs H1: param != beta0
-  #' @param type character or function. The character string specifies the type
-  #'        of boostrap to use: One of "rademacher", "mammen", "norm"
-  #'        and "webb". Alternatively, type can be a function(n) for drawing 
-  #'        wild bootstrap factors. "rademacher" by default.  
-  #'        For the Rademacher and Mammen distribution, if the number of replications B exceeds 
-  #'        the number of possible draw ombinations, 2^(#number of clusters), then `boottest()` 
-  #'        will use each possible combination once (enumeration).
-  #' @param impose_null Logical. Controls if the null hypothesis is imposed on
-  #'        the bootstrap dgp or not. Null imposed `(WCR)` by default.
-  #'        If FALSE, the null is not imposed `(WCU)`
-  #' @param p_val_type Character vector of length 1. Type of p-value. 
-  #'        By default "two-tailed". 
-  #' @param tol Numeric vector of length 1. The desired accuracy 
-  #'        (convergence tolerance) used in the root finding procedure to find the confidence interval.
-  #'        1e-6 by default.
-  #' @param maxiter Integer. Maximum number of iterations used in the root finding procedure to find the confidence interval.
-  #'        10 by default.
-  #' @param na_omit Logical. If TRUE, `boottest()` omits rows with missing 
-  #'        variables in the cluster variable that have not previously been deleted
-  #'        when fitting the regression object (e.g. if the cluster variable was not used 
-  #'        when fitting the regression model).
-  #' @param nthreads The number of threads. Can be: a) an integer lower than, 
-  #'                 or equal to, the maximum number of threads; b) 0: meaning 
-  #'                 all available threads will be used; c) a number strictly
-  #'                 between 0 and 1 which represents the fraction of all threads 
-  #'                 to use. The default is to use 1 core.
-  #' @param ... Further arguments passed to or from other methods.
-  #'
-  #' @importFrom dreamerr check_arg validate_dots
-  #' @return An object of class \code{boottest}
-  #' 
-  #' \item{p_val}{The bootstrap p-value.}
-  #' \item{t_stat}{The regression t-statistic of interest, recalculated in the bootstrap.}
-  #' \item{conf_int}{The bootstrap confidence interval.}
-  #' \item{param}{The tested parameter.}
-  #' \item{N}{Sample size. Might differ from the regression sample size if 
-  #'      the cluster variables contain NA values.}
-  #' \item{B}{Number of Bootstrap Iterations.}
-  #' \item{clustid}{Names of the cluster Variables.}
-  #' \item{N_G}{Dimension of the cluster variables as used in boottest.}
-  #' \item{sign_level}{Significance level used in boottest.}
-  #' \item{type}{Distribution of the bootstrap weights.}
-  #' \item{p_test_vals}{All p-values calculated while calculating the confidence
-  #'      interval.}
-  #' \item{test_vals}{All t-statistics calculated while calculating the
-  #'       confidence interval.}
-  #' \item{regression}{The regression object used in boottest.}
-  #' \item{call}{Function call of boottest.}
-  #' 
-  #' @export
-  #' @method boottest felm
-  #' 
-  #' @section Confidence Intervals:
-  #' \code{boottest} computes confidence intervals by inverting p-values.
-  #'       In practice, the following procedure is used:
-  #' \itemize{
-  #' \item Based on an initial guess for starting values, calculate p-values for
-  #'       26 equal spaced points between the starting values.
-  #' \item Out of the 26 calculated p-values, find the two pairs of values x 
-  #'       for which the corresponding p-values px cross the significance level
-  #'       sign_level.
-  #' \item Feed the two pairs of x into an numerical root finding procedure and 
-  #'       solve for the root. boottest currently relies on 
-  #'       \code{stats::uniroot} and sets an absolute tolerance of 1e-06 and 
-  #'       stops the procedure after 10 iterations.
-  #' }
-  #' @section Standard Errors:
-  #' \code{boottest} does not calculate standard errors.
-  #' @references Roodman et al., 2019, "Fast and wild: Bootstrap inference 
-  #'             in STATA using boottest", The STATA Journal. 
-  #'             (\url{https://journals.sagepub.com/doi/full/10.1177/1536867X19830877})
-  #' @examples 
-  #' 
-  #' if(requireNamespace("lfe")){
-  #' library(fwildclusterboot)
-  #' library(lfe)
-  #' data(voters)
-  #' felm_fit <- felm(proposition_vote ~ treatment + ideology1 + log_income
-  #'            | Q1_immigration, 
-  #'            data = voters)
-  #' boot1 <- boottest(felm_fit, 
-  #'                   B = 9999, 
-  #'                   param = "treatment",
-  #'                   clustid = "group_id1")
-  #' boot2 <- boottest(felm_fit, 
-  #'                   B = 9999, 
-  #'                   param = "treatment", 
-  #'                   clustid = c("group_id1", "group_id2"))
-  #' boot3 <- boottest(felm_fit, 
-  #'                   B = 9999, 
-  #'                   param = "treatment", 
-  #'                   clustid = c("group_id1", "group_id2"),
-  #'                   fe = "Q1_immigration")
-  #' boot4 <- boottest(felm_fit, 
-  #'                   B = 999, 
-  #'                   param = "treatment", 
-  #'                   clustid = c("group_id1", "group_id2"),
-  #'                   fe = "Q1_immigration", 
-  #'                   sign_level = 0.2, 
-  #'                   seed = 8,
-  #'                   beta0 = 2)
-  #' summary(boot1)
-  #' plot(boot1)
-  #' }
-
-
   call <- match.call()
 
   dreamerr::validate_dots(stop = TRUE)
   
   # check_arg(clustid, "os formula | data.frame | named list")
-  check_arg(param, "scalar character")
+  check_arg(param, "scalar character | character vector")
   check_arg(B, "scalar integer ")
   check_arg(sign_level, "scalar numeric | NULL")
   check_arg(conf_int, "logical scalar | NULL")
   check_arg(seed, "scalar integer | NULL")
+  check_arg(R, "NULL| scalar numeric | numeric vector")
   check_arg(beta0, "numeric scalar | NULL")
   check_arg(fe, "character scalar | NULL")
   check_arg(bootcluster, "character vector")
@@ -189,9 +203,15 @@ boottest.felm <- function(object,
          call. = FALSE)
   }
 
-  if(!(p_val_type %in% c("two-tailed", "equal-tailed"))){
-    stop("The function argument p_val_type must be either
-         two-tailed or equal-tailed.")
+  if(!(p_val_type %in% c("two-tailed", "equal-tailed",">", "<"))){
+    stop("The function argument p_val_type must be
+         'two-tailed', 'equal-tailed','>' or '<'.", 
+         call. = FALSE)
+  }
+  
+  if(p_val_type %in% c(">", "<") && conf_int == TRUE){
+    conf_int <- FALSE
+    warning(paste("Currently, boottest() does not calculate confidence intervals for one-sided hypotheses, but this will change in a future release."), call. = FALSE)
   }
   
   if ((conf_int == TRUE || is.null(conf_int)) & B <= 100) {
@@ -214,7 +234,7 @@ boottest.felm <- function(object,
     sign_level <- 0.05
   }
 
-  if (!(param %in% c(rownames(object$coefficients)))) {
+  if (mean(param %in% c(rownames(object$coefficients))) != 1) {
     stop(paste("The parameter", param, "is not included 
                in the estimated model. Maybe you are trying to 
                test for an interaction parameter? To see all model
@@ -222,14 +242,16 @@ boottest.felm <- function(object,
   }
   # repeat the same: check if fe is in the data.frame
 
-  if (is.null(beta0)) {
-    beta0 <- 0
+  if(is.null(R)){
+    R <- rep(1, length(param))
+  } else {
+    if(length(R) != length(param)){
+      stop("The constraints vector must either be NULL or a numeric of the same length as the `param` input vector.")
+    }
   }
 
-  if (!is.null(fe) && fe %in% clustid) {
-    stop(paste("The function argument fe =", fe, "is contained in 
-               the clustering variables. This is not allowed. Please 
-               set fe to another factor variable or NULL."),
+  if (!is.null(fe) && fe %in% c(clustid, param)) {
+    stop(paste("The function argument fe =", fe, "is included in either the clustering variables or the the hypothesis (via the `param` argument). This is not allowed. Please set fe to another factor variable or NULL."),
       call. = FALSE
     )
   }
@@ -261,12 +283,13 @@ boottest.felm <- function(object,
                             fe = fe,
                             param = param,
                             bootcluster = bootcluster, 
-                            na_omit = na_omit)
+                            na_omit = na_omit, 
+                            R = R)
 
   clustid_dims <- preprocess$clustid_dims
   # Invert p-value
-  point_estimate <- object$coefficients[param, ]
-
+  point_estimate <- as.vector(object$coefficients[param,] %*% preprocess$R0[param])
+  
   # number of clusters used in bootstrap - always derived from bootcluster
   N_G <- length(unique(preprocess$bootcluster[, 1]))
   N_G_2 <- 2^N_G
@@ -313,7 +336,7 @@ boottest.felm <- function(object,
       se_guess <- abs((point_estimate - beta0) / res$t_stat)
     }
 
-    res_p_val <- invert_p_val2(
+    res_p_val <- invert_p_val(
       object = res,
       boot_iter = B,
       point_estimate = point_estimate,
@@ -339,9 +362,10 @@ boottest.felm <- function(object,
     point_estimate = point_estimate,
     p_val = res[["p_val"]],
     conf_int = res_p_val$conf_int,
-    p_test_vals = res_p_val$p_test_vals,
-    test_vals = res_p_val$test_vals,
+    p_test_vals = res_p_val$p_grid_vals,
+    test_vals = res_p_val$grid_vals,
     t_stat = res$t_stat,
+    t_boot = res$t_boot,
     regression = res$object,
     param = param,
     N = preprocess$N,
@@ -352,7 +376,9 @@ boottest.felm <- function(object,
     sign_level = sign_level,
     call = call,
     type = type,
-    impose_null = impose_null
+    impose_null = impose_null,
+    R = R, 
+    beta0 = beta0
   )
 
 

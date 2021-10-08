@@ -10,6 +10,10 @@ feols_fit <- feols(proposition_vote ~ treatment + ideology1 + log_income + Q1_im
                            data = fwildclusterboot:::create_data(N = 1000, N_G1 = 10, icc1 = 0.01, N_G2 = 10, icc2 = 0.01, numb_fe1 = 10, numb_fe2 = 10, seed = 1234))
 felm_fit <- felm(proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration, 
                       data = fwildclusterboot:::create_data(N = 1000, N_G1 = 10, icc1 = 0.01, N_G2 = 10, icc2 = 0.01, numb_fe1 = 10, numb_fe2 = 10, seed = 1234))
+feols_fit_c <- feols(proposition_vote ~ treatment + ideology1 + log_income | Q1_immigration, 
+                   data = fwildclusterboot:::create_data(N = 1000, N_G1 = 10, icc1 = 0.01, N_G2 = 10, icc2 = 0.01, numb_fe1 = 10, numb_fe2 = 10, seed = 1234))
+felm_fit_c <- felm(proposition_vote ~ treatment + ideology1 + log_income | Q1_immigration, 
+                 data = fwildclusterboot:::create_data(N = 1000, N_G1 = 10, icc1 = 0.01, N_G2 = 10, icc2 = 0.01, numb_fe1 = 10, numb_fe2 = 10, seed = 1234))
 
 # sign_level
 expect_error(boottest(object = lm_fit, clustid =  "group_id1", B = 999, seed = 911, param = "treatment", conf_int = TRUE, 
@@ -176,21 +180,21 @@ expect_error(boottest(object = lm_fit,
                       B = 999, seed = 911, 
                       param = "treatment",
                       conf_int = TRUE, 
-                      p_val_type = ">"))
+                      p_val_type = "equaltail"))
 
 expect_error(boottest(object = feols_fit,
                       clustid =  "group_id1",
                       B = 999, seed = 911, 
                       param = "treatment",
                       conf_int = TRUE, 
-                      p_val_type = ">"))
+                      p_val_type = "equaltail"))
 
 expect_error(boottest(object = felm_fit,
                       clustid =  "group_id1",
                       B = 999, seed = 911, 
                       param = "treatment",
                       conf_int = TRUE, 
-                      p_val_type = ">"))
+                      p_val_type = "equaltail"))
 
 # B = 1000
 expect_message(boottest(object = lm_fit,
@@ -329,7 +333,7 @@ expect_error(
     object = lm_fit, 
     clustid =  "group_id1", 
     # guarantees that full enumeration is employed
-    B = 2^z + 1, 
+    B = 2^4 + 1, 
     seed = 1, 
     param = "treatment", 
     type = "mammen",
@@ -397,4 +401,35 @@ expect_warning(
       na_omit = TRUE)
 )
 expect_equal(res$N, 98)
+
+
+# expect error when length(R) != length(param)
+
+expect_error(boottest(object = lm_fit, clustid =  "group_id1", B = 999, seed = 911, param = c("treatment", "ideology1"), R = 1, conf_int = TRUE))
+expect_error(boottest(object = feols_fit, clustid = c("group_id1"), B = 999, seed = 911, param = c("treatment", "ideology1"), R = 1, conf_int = TRUE))
+expect_error(boottest(object = felm_fit, clustid =  "group_id1", B = 999, seed = 911, param = c("treatment", "ideology1"), R = 1, conf_int = TRUE))
+
+# specify a fixed effect that is also clustering variable OR test variable -> error
+
+expect_error(boottest(object = feols_fit_c, fe = "Q1_immigration", clustid = c("Q1_immigration"), B = 999, seed = 911, param = c("treatment", "ideology1"), R = 1, conf_int = TRUE))
+expect_error(boottest(object = felm_fit_c, fe = "Q1_immigration", clustid =  "Q1_immigration", B = 999, seed = 911, param = c("treatment", "ideology1"), R = 1, conf_int = TRUE))
+
+expect_error(boottest(object = feols_fit_c, clustid = c("Q1_immigration"), B = 999, seed = 911, param = c("Q1_immigration"), R = 1, conf_int = TRUE))
+expect_error(boottest(object = felm_fit_c, clustid =  "Q1_immigration", B = 999, seed = 911, param = c("Q1_immigration"), R = 1, conf_int = TRUE))
+
+
+# test for p-val type & conf_int == TRUE (tba)
+
+
+
+
+
+
+
+
+
+
+
+
+
 

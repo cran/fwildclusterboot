@@ -148,8 +148,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fwildclusterboot)</span></code></pre></div>
 <p>The <code>fwildclusterboot</code> package is an R port of STATA’s <a href="https://github.com/droodman/boottest">boottest</a> package.</p>
 <p>It implements the “fast” wild cluster bootstrap algorithm developed in Roodman et al (2019) for regression objects in R. The “fast” algorithm makes it feasible to calculate test statistics based on a large number of bootstrap draws even for large samples - as long as the number of bootstrapping clusters is not too large.</p>
-<p>A description of the algorithm is beyond the scope of this vignette. It is very clearly presented in <a href="https://econpapers.repec.org/paper/qedwpaper/1406.htm">Roodman et al. (2019)</a>. For technical details of the implementation in <code>fwildclusterboot</code>, have a look at the <code>technical vignette</code>.</p>
-<p>For linear regression models, <code>fwildclusterboot</code> supports almost all features of <code>boottest</code>. This means that a set of different bootstrap distributions, regression weights, fixed effects, and both restricted (WCR) and unrestricted (WCU) boostrap inference are supported. The main difference is that it currently only supports univariate hypothesis tests of regression paramters of the form <span class="math inline">\(H_{0}: \beta_{k} = \beta_{k}^{0}\)</span> vs <span class="math inline">\(H_{1}: \beta_{k} \neq \beta_{k}^{0}\)</span>.</p>
+<p>A description of the algorithm is beyond the scope of this vignette. It is very clearly presented in <a href="https://econpapers.repec.org/paper/qedwpaper/1406.htm">Roodman et al. (2019)</a>. For technical details of the implementation in <code>fwildclusterboot</code>, have a look at the <code>technical vignette</code> (tba).</p>
+<p>For linear regression models, <code>fwildclusterboot</code> supports almost all features of <code>boottest</code>. This means that a set of different bootstrap distributions, regression weights, fixed effects, and both restricted (WCR) and unrestricted (WCU) boostrap inference are supported. The main difference is that it currently only supports univariate hypothesis tests of regression paramters of the form <span class="math inline">\(H_{0}: R\beta = R\)</span> vs <span class="math inline">\(H_{1}: R\beta \neq r\)</span>, where r is scalar.</p>
 <p>In contrast to <code>boottest</code>, <code>fwildclusterboot</code> does not support methods for instrumental variable estimation and the score bootstrap for non-linear models.</p>
 <div id="the-boottest-function" class="section level1">
 <h1>The <code>boottest()</code> function</h1>
@@ -176,30 +176,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>To tests for an interaction, it is important to use the coefficient names that are internally created by the modeling function.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#names(coef(lm_fit_interact))</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>boot_lm_interact <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit_interact, <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, <span class="at">param =</span> <span class="st">&quot;log_income:Q1_immigration1&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span></code></pre></div>
+<p><code>boottest()</code> further allows for multivariable tests. Suppose we’re interested in testing the null hypothesis <span class="math inline">\(0.6*treatment + 0.2*ideology1 = 0.02\)</span>. To test such a hypothesis, one would have to specify the hypothesis via the <code>param</code>, <code>R</code> and <code>beta0</code> arguments:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>boot_multi <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;ideology1&quot;</span>), <span class="at">R =</span> <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="fl">0.2</span>), <span class="at">beta0 =</span> <span class="fl">0.02</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span></code></pre></div>
 <p>To access the estimation results, <code>boottest()</code> comes with <code>summary()</code>, <code>tidy()</code> and <code>glance()</code> methods. The <code>tidy()</code> method returns the estimation results in a data.frame. <code>summary()</code> returns additional information on top of the test statistics reported by <code>tidy()</code>. The<code>glance()</code> method enables the use of output formatting tools from the <code>modelsummary</code> package.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fwildclusterboot&#39;s internal summary() method</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_lm)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, clustid = &quot;group_id1&quot;, param = &quot;treatment&quot;, </span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     B = 9999)</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Observations: 300</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Iter: 9999</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Type: rademacher</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Clustering: 1-way</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Confidence Sets: 95%</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 treatment    0.073     3.786   0.001    0.033     0.112</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># summary via the modelsummary package</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm, boot_lm_interact), </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>           <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)  </span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required namespace: modelsummary</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fwildclusterboot&#39;s internal summary() method</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_lm)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, clustid = &quot;group_id1&quot;, param = &quot;treatment&quot;, </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     B = 9999)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Hypothesis: 1*treatment = 0</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Observations: 300</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Iter: 9999</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Type: rademacher</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Clustering: 1-way</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Confidence Sets: 95%</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              term estimate statistic p.value conf.low conf.high</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.786   0.001    0.033     0.112</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_multi)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, clustid = &quot;group_id1&quot;, param = c(&quot;treatment&quot;, </span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &quot;ideology1&quot;), B = 9999, R = c(0.6, 0.2), beta0 = 0.02)</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Hypothesis: 0.6*treatment+0.2*ideology1 = 0.02</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Observations: 300</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Iter: 9999</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Type: rademacher</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Clustering: 1-way</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Confidence Sets: 95%</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 term estimate statistic p.value conf.low</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6*treatment+0.2*ideology1 = 0.02    0.048     2.395   0.023    0.024</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   conf.high</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     0.072</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># summary via the modelsummary package</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm, boot_lm_interact), </span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>            <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>           <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)  </span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required namespace: modelsummary</span></span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -216,7 +235,7 @@ Model 2
 <tbody>
 <tr>
 <td style="text-align:left;">
-treatment
+1*treatment = 0
 </td>
 <td style="text-align:center;">
 0.073 (0.001)
@@ -235,7 +254,7 @@ treatment
 </tr>
 <tr>
 <td style="text-align:left;">
-log_income × Q1_immigration1
+1*log_income × Q1_immigration1 = 0
 </td>
 <td style="text-align:center;">
 </td>
@@ -321,47 +340,48 @@ Log.Lik.
 </tbody>
 </table>
 <p>A <code>plot()</code> method allows the user to inspect the bootstrap t-statistics:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boot_lm)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boot_lm)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <!-- A note on the output in `tidy()` and `summary()`: -->
 <div id="multiway-clustering" class="section level2">
 <h2>Multiway Clustering</h2>
 <p>The <code>boottest()</code> function supports clustering of any dimension. E.g. for two-way clustering, one simply needs to specify the names of the cluster variables in a character vector.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_lm)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, clustid = c(&quot;group_id1&quot;, &quot;group_id2&quot;), </span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     param = &quot;treatment&quot;, B = 9999)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Observations: 300</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Iter: 9999</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Type: rademacher</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Clustering: 2-way</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Confidence Sets: 95%</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40 20 251</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 treatment    0.073     3.925   0.005     0.03     0.116</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_lm)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, clustid = c(&quot;group_id1&quot;, &quot;group_id2&quot;), </span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     param = &quot;treatment&quot;, B = 9999)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Hypothesis: 1*treatment = 0</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Observations: 300</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Iter: 9999</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Bootstr. Type: rademacher</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Clustering: 2-way</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Confidence Sets: 95%</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40 20 251</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              term estimate statistic p.value conf.low conf.high</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.925   0.005     0.03     0.116</span></span></code></pre></div>
 </div>
 <div id="choice-of-bootstrap-weights" class="section level2">
 <h2>Choice of Bootstrap Weights</h2>
 <p>Furthermore, the user can choose among four different weighting distribution via the <code>type</code> argument: Rademacher, Mammen, Normal and Webb. By default, <code>boottest()</code> uses the Rademacher distribution.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>boot_lm_rade <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">999</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">&quot;rademacher&quot;</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>boot_lm_webb <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">999</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">&quot;webb&quot;</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm_rade, boot_lm_webb), </span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>boot_lm_rade <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">999</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">&quot;rademacher&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>boot_lm_webb <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">999</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">&quot;webb&quot;</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm_rade, boot_lm_webb), </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -378,7 +398,7 @@ Model 2
 <tbody>
 <tr>
 <td style="text-align:left;">
-treatment
+1*treatment = 0
 </td>
 <td style="text-align:center;">
 0.073 (0.007)
@@ -469,21 +489,21 @@ Log.Lik.
 <div id="other-function-arguments" class="section level2">
 <h2>Other function arguments</h2>
 <p>Via the function argument <code>sign_level</code>, the user can control the significance level of the test. The default value is sign_level = 0.05, which corresponds to a 95% confindence interval.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>boot_lm_5 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sign_level =</span> <span class="fl">0.05</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>boot_lm_10 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sign_level =</span> <span class="fl">0.10</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm_5, boot_lm_10), </span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>boot_lm_5 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sign_level =</span> <span class="fl">0.05</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>boot_lm_10 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sign_level =</span> <span class="fl">0.10</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm_5, boot_lm_10), </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -500,7 +520,7 @@ Model 2
 <tbody>
 <tr>
 <td style="text-align:left;">
-treatment
+1*treatment = 0
 </td>
 <td style="text-align:center;">
 0.073 (0.001)
@@ -588,24 +608,24 @@ Log.Lik.
 </tbody>
 </table>
 <p>In the case of multiway clustering, the user might want to specify the bootstrap clustering level. By default, boottest chooses the clustering level with the highest number of clusters as <code>bootcluster = &quot;max&quot;</code>. Other choices are the minimum cluster, or independent clustering variables.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>boot_lm1 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;min&quot;</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>boot_lm2 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;group_id1&quot;</span>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm1, boot_lm2), </span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>boot_lm1 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;min&quot;</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>boot_lm2 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;group_id1&quot;</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="fu">list</span>(boot_lm1, boot_lm2), </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -622,7 +642,7 @@ Model 2
 <tbody>
 <tr>
 <td style="text-align:left;">
-treatment
+1*treatment = 0
 </td>
 <td style="text-align:center;">
 0.073 (0.005)
@@ -713,43 +733,43 @@ Log.Lik.
 <div id="fixed-effects" class="section level2">
 <h2>Fixed Effects</h2>
 <p>Last, <code>boottest()</code> supports out-projection of fixed effects in the estimation stage via <code>lfe::felm()</code> and <code>fixest::feols()</code>. Within the bootstrap, the user can choose to project out <em>only one</em> fixed effect, which can be set via the <code>fe</code> function argument. All other fixed effects specified in either <code>felm()</code> or <code>feols()</code> are treated as sets of binary regressors.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;fixest&quot;</span>)){</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimate the regression model via feols</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(fixest)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  feols_fit <span class="ot">&lt;-</span> <span class="fu">feols</span>(proposition_vote <span class="sc">~</span> treatment <span class="sc">+</span> ideology1 <span class="sc">+</span> log_income <span class="sc">|</span> Q1_immigration , <span class="at">data =</span> voters)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  boot_feols <span class="ot">&lt;-</span> <span class="fu">boottest</span>(feols_fit, </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fe =</span> <span class="st">&quot;Q1_immigration&quot;</span>)</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;fixest&quot;</span>)){</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimate the regression model via feols</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(fixest)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  feols_fit <span class="ot">&lt;-</span> <span class="fu">feols</span>(proposition_vote <span class="sc">~</span> treatment <span class="sc">+</span> ideology1 <span class="sc">+</span> log_income <span class="sc">|</span> Q1_immigration , <span class="at">data =</span> voters)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  boot_feols <span class="ot">&lt;-</span> <span class="fu">boottest</span>(feols_fit, </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fe =</span> <span class="st">&quot;Q1_immigration&quot;</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="the-subcluster-bootstrap" class="section level2">
 <h2>The Subcluster Bootstrap</h2>
 <p>In the case of few treated clusters, <a href="https://academic.oup.com/ectj/article-abstract/21/2/114/5078969">MacKinnon and Webb (2018)</a> suggest to use subclusters to form the bootstrap distribution. <code>boottest()</code> allows the user to specify subclusters via the <code>bootcluster</code> argument.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>boot_min <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit,</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;min&quot;</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>boot_var <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;group_id1&quot;</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>boot_2var <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;Q1_immigration&quot;</span>))</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="at">model =</span> <span class="fu">list</span>(boot_min, boot_2var), </span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>boot_min <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;min&quot;</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>boot_var <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="st">&quot;group_id1&quot;</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>boot_2var <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bootcluster =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;Q1_immigration&quot;</span>))</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;modelsummary&quot;</span>)){</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(modelsummary)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">msummary</span>(<span class="at">model =</span> <span class="fu">list</span>(boot_min, boot_2var), </span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">estimate =</span> <span class="st">&quot;{estimate} ({p.value})&quot;</span>, </span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">statistic =</span> <span class="st">&quot;[{conf.low}, {conf.high}]&quot;</span>)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -766,7 +786,7 @@ Model 2
 <tbody>
 <tr>
 <td style="text-align:left;">
-treatment
+1*treatment = 0
 </td>
 <td style="text-align:center;">
 0.073 (0.005)
@@ -857,23 +877,23 @@ Log.Lik.
 <div id="regression-weights-weighted-least-squares-wls" class="section level2">
 <h2>Regression Weights / Weighted Least Squares (WLS)</h2>
 <p>If regression weights are specified in the estimation stage via <code>lm()</code>, <code>feols()</code> or <code>felm()</code>, <code>boottest()</code> incorporates the weights into the bootstrap inference:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression with weights / WLS</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lm_w_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(proposition_vote <span class="sc">~</span> treatment <span class="sc">+</span> ideology1 <span class="sc">+</span> log_income, <span class="at">weights =</span> voters<span class="sc">$</span>weights, <span class="at">data =</span> voters)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>boot_w_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_w_fit, </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">B =</span> <span class="dv">9999</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression with weights / WLS</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>lm_w_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(proposition_vote <span class="sc">~</span> treatment <span class="sc">+</span> ideology1 <span class="sc">+</span> log_income, <span class="at">weights =</span> voters<span class="sc">$</span>weights, <span class="at">data =</span> voters)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>boot_w_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_w_fit, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">B =</span> <span class="dv">9999</span>)</span></code></pre></div>
 </div>
 <div id="parallel-execution" class="section level2">
 <h2>Parallel Execution</h2>
 <p>A major bottleneck for the performance of <code>boottest()</code> is a large matrix multiplication, which includes the bootstrap weights matrix on the right. In order to speed up the computation, this multiplication calls the c++ Eigen library, which allows for parallelization of dense matrix products. By default, <code>boottest()</code> uses one thread. Note that there is a cost of parallelization due to communication overhead. As a rule of thumb, if <code>boottest()</code> takes more than 10 seconds per execution, using a second thread might speed up the bootstrap.</p>
 <p>The number of threads can be specified via the <code>nthreads</code> argument of <code>boottest()</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">B =</span> <span class="dv">9999</span>, </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">nthreads =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">B =</span> <span class="dv">9999</span>, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">nthreads =</span> <span class="dv">2</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="miscellanea" class="section level1">

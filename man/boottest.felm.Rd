@@ -13,6 +13,7 @@
   fe = NULL,
   conf_int = NULL,
   seed = NULL,
+  R = NULL,
   beta0 = 0,
   sign_level = NULL,
   type = "rademacher",
@@ -54,6 +55,8 @@ intervals by p-value inversion. If FALSE, only the p-value is returned.}
 internal seed. Hence by default, calling \code{boottest()} multiple times on the same object will produce
 the same test statistics.}
 
+\item{R}{Hypothesis Vector giving linear combinations of coefficients. Must be either NULL or a vector of the same length as \code{param}. If NULL, a vector of ones of length param.}
+
 \item{beta0}{A numeric. Shifts the null hypothesis
 H0: param = beta0 vs H1: param != beta0}
 
@@ -74,7 +77,7 @@ the bootstrap dgp or not. Null imposed \code{(WCR)} by default.
 If FALSE, the null is not imposed \code{(WCU)}}
 
 \item{p_val_type}{Character vector of length 1. Type of p-value.
-By default "two-tailed".}
+By default "two-tailed". Other options include "equal-tailed", ">" and "<".}
 
 \item{tol}{Numeric vector of length 1. The desired accuracy
 (convergence tolerance) used in the root finding procedure to find the confidence interval.
@@ -100,7 +103,6 @@ to use. The default is to use 1 core.}
 An object of class \code{boottest}
 
 \item{p_val}{The bootstrap p-value.}
-\item{t_stat}{The regression t-statistic of interest, recalculated in the bootstrap.}
 \item{conf_int}{The bootstrap confidence interval.}
 \item{param}{The tested parameter.}
 \item{N}{Sample size. Might differ from the regression sample size if
@@ -112,8 +114,10 @@ the cluster variables contain NA values.}
 \item{type}{Distribution of the bootstrap weights.}
 \item{p_test_vals}{All p-values calculated while calculating the confidence
 interval.}
+\item{t_stat}{The original test statistics - either imposing the null or not - with small sample correction \code{G / (G-1)}.}
 \item{test_vals}{All t-statistics calculated while calculating the
 confidence interval.}
+\item{t_boot}{All bootstrap t-statistics.}
 \item{regression}{The regression object used in boottest.}
 \item{call}{Function call of boottest.}
 }
@@ -174,12 +178,27 @@ boot4 <- boottest(felm_fit,
                   sign_level = 0.2, 
                   seed = 8,
                   beta0 = 2)
+# test treatment + ideology1 = 2                   
+boot5 <- boottest(felm_fit, 
+                  B = 9999, 
+                  clustid = c("group_id1", "group_id2"),
+                  param = c("treatment", "ideology1"),
+                  R = c(1, 1), 
+                  beta0 = 2)
 summary(boot1)
 plot(boot1)
 }
 }
 \references{
-Roodman et al., 2019, "Fast and wild: Bootstrap inference
-in STATA using boottest", The STATA Journal.
+Roodman et al., 2019, "Fast and wild: Bootstrap inference in
+STATA using boottest", The STATA Journal.
 (\url{https://journals.sagepub.com/doi/full/10.1177/1536867X19830877})
+
+Cameron, A. Colin, Jonah B. Gelbach, and Douglas L. Miller. "Bootstrap-based improvements for inference with clustered errors." The Review of Economics and Statistics 90.3 (2008): 414-427.
+
+MacKinnon, James G., and Matthew D. Webb. "The wild bootstrap for few (treated) clusters." The Econometrics Journal 21.2 (2018): 114-135.
+
+MacKinnon, James. "Wild cluster bootstrap confidence intervals." L'Actualite economique 91.1-2 (2015): 11-33.
+
+Webb, Matthew D. Reworking wild bootstrap based inference for clustered errors. No. 1315. Queen's Economics Department Working Paper, 2013.
 }
