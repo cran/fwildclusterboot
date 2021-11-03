@@ -1,4 +1,4 @@
-boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_null, beta0, sign_level, param, seed, p_val_type, nthreads, type, full_enumeration) {
+boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_null, beta0, sign_level, param, p_val_type, nthreads, type, full_enumeration) {
   
   #' Fast wild cluster bootstrap algorithm 
   #' 
@@ -13,7 +13,6 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   #' @param beta0 Shifts the null hypothesis.
   #' @param sign_level The significance level.
   #' @param param name of the test parameter.
-  #' @param seed the random seed. controls draw of bootstrap weights.
   #' @param p_val_type type Type of p-value. By default "two-tailed". Other options: "equal-tailed", ">", "<"
   #' @param nthreads The number of threads. Can be: a) an integer lower than, 
   #'                 or equal to, the maximum number of threads; b) 0: meaning 
@@ -34,6 +33,8 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   #' @importFrom collapse fsum GRP
   #' @importFrom stats as.formula coef model.matrix model.response model.weights residuals rlnorm rnorm update
   #' @importFrom gtools permutations
+  #' @importFrom dqrng dqsample dqset.seed
+
   
 
   # 1) preprocess
@@ -58,7 +59,8 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   # }
   
   # bootstrap error
-  set.seed(seed)
+  #set.seed(seed)
+  # dqrng::dqset.seed(seed)
   N_G_bootcluster <- length(unique(bootcluster[[1]]))
   
   # here: enumeration 
@@ -67,10 +69,10 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   
   wild_draw_fun <- switch(type,
                           # note: for randemacher, create integer matrix (uses less memory than numeric)                      
-                          rademacher = function(n) sample(c(-1L, 1L), n, replace = TRUE),
-                          mammen = function(n) sample(c(-1, 1) * (sqrt(5) + c(-1, 1)) / 2, n, replace = TRUE, prob = (sqrt(5) + c(1, -1)) / (2 * sqrt(5))),
-                          norm = function(n) rnorm(n),
-                          webb = function(n) sample(c(-sqrt((3:1) / 2), sqrt((1:3) / 2)), n, replace = TRUE),
+                          rademacher = function(n) dqrng::dqsample(c(-1L, 1L), n, replace = TRUE),
+                          mammen = function(n) dqrng::dqsample(c(-1, 1) * (sqrt(5) + c(-1, 1)) / 2, n, replace = TRUE, prob = (sqrt(5) + c(1, -1)) / (2 * sqrt(5))),
+                          norm = function(n) dqrng::dqrnorm(n),
+                          webb = function(n) dqrng::dqsample(c(-sqrt((3:1) / 2), sqrt((1:3) / 2)), n, replace = TRUE),
                           wild_draw_fun
   )
   
@@ -107,14 +109,15 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   weights_sq <- sqrt(weights)                           # sqrt fine because diagonal matrix
   A <- solve(crossprod(weights_sq * X))                 # k x k
   XXinv <- solve(crossprod(X))                          # k x k
-  #Px <- X %*% XXinv %*% t(X)                            # N x N projection matrix: dim N x N - computation should be avoided
-    
+  WX <- weights * X
+  
   if(impose_null == TRUE){
-    Q <- - X %*% XXinv %*% t(R) %*% solve(R %*% XXinv %*% t(R))        # N x 1
-    P <- Y - X %*% (XXinv %*% (t(X) %*% Y)) - Q %*% (R %*% XXinv %*% t(X)) %*% Y
+    Q <- - X %*% A %*% t(R) %*% solve(R %*% A %*% t(R))        # N x 1
+    P <- Y - X %*% (A %*% (t(WX) %*% Y)) - Q %*% (R %*% A %*% t(WX)) %*% Y
   } else if(impose_null == FALSE){
-    P <- Y - X %*% (XXinv %*% (t(X) %*% Y)) 
-    Q <- matrix(0, nrow(P), 1)
+      P <- Y - X %*% (A %*% (t(WX) %*% Y)) 
+      Q <- matrix(0, nrow(P), 1)
+      #R[,1] <- 0
   }
 
   # pre-compute objects used in for-loop below: 
@@ -124,8 +127,8 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   WXARP <- WXAR * as.vector(P)
   WXARQ <- WXAR * as.vector(Q)
   
-  P1 <- collapse::fsum(weights * as.vector(P) * X, g)         # P1 as in notes "Implementation details. Formerly called "SuXa". dim = N_G x k
-  Q1 <- collapse::fsum(weights * as.vector(Q) * X, g)         # Q1 as in notes "Implementation details. Formerly called "SuXa". dim = N_G x k
+  P1 <- collapse::fsum(WX * as.vector(P), g)         # P1 as in notes "Implementation details. Formerly called "SuXa". dim = N_G x k
+  Q1 <- collapse::fsum(WX * as.vector(Q), g)         # Q1 as in notes "Implementation details. Formerly called "SuXa". dim = N_G x k
   # "crosstab for vectors" via sparse matrices 
   P2_bootcluster <- Matrix::t(                                        
     Matrix.utils::aggregate.Matrix(                           # see notes; formerly diag_XinvXXRuS_a   

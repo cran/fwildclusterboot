@@ -55,9 +55,7 @@ returns 0.95\% confidence intervals. By default, sign_level = 0.05.}
 \item{conf_int}{A logical vector. If TRUE, boottest computes confidence
 intervals by p-value inversion. If FALSE, only the p-value is returned.}
 
-\item{seed}{An integer. Allows the user to set a random seed. If NULL, \code{boottest()} sets an
-internal seed. Hence by default, calling \code{boottest()} multiple times on the same object will produce
-the same test statistics.}
+\item{seed}{An integer. Allows the user to set a random seed. If you want to set a "global" seed, set it via \code{dqrng::dqset.seed()}.}
 
 \item{R}{Hypothesis Vector giving linear combinations of coefficients. Must be either NULL or a vector of the same length as \code{param}. If NULL, a vector of ones of length param.}
 
@@ -68,7 +66,7 @@ H0: param = beta0 vs H1: param != beta0}
 of boostrap to use: One of "rademacher", "mammen", "norm"
 and "webb". Alternatively, type can be a function(n) for drawing
 wild bootstrap factors. "rademacher" by default.
-For the Rademacher and Mammen distribution, if the number of replications B exceeds
+For the Rademacher distribution, if the number of replications B exceeds
 the number of possible draw ombinations, 2^(#number of clusters), then \code{boottest()}
 will use each possible combination once (enumeration).}
 
@@ -124,7 +122,8 @@ confidence interval.}
 \description{
 \code{boottest.fixest} is a S3 method that allows for fast wild cluster
 bootstrap inference for objects of class fixest by  implementing
-the fast wild bootstrap algorithm developed in Roodman et al., 2019.
+the fast wild bootstrap algorithm developed in Roodman et al., 2019 and
+implemented in the STATA package \code{boottest}.
 }
 \section{Confidence Intervals}{
 

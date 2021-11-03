@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>fwildclusterboot</code> package is an R port of STATA’s <a href="https://github.com/droodman/boottest">boottest</a> package.</p>
 <p>It implements the “fast” wild cluster bootstrap algorithm developed in Roodman et al (2019) for regression objects in R. The “fast” algorithm makes it feasible to calculate test statistics based on a large number of bootstrap draws even for large samples - as long as the number of bootstrapping clusters is not too large.</p>
 <p>A description of the algorithm is beyond the scope of this vignette. It is very clearly presented in <a href="https://econpapers.repec.org/paper/qedwpaper/1406.htm">Roodman et al. (2019)</a>. For technical details of the implementation in <code>fwildclusterboot</code>, have a look at the <code>technical vignette</code> (tba).</p>
-<p>For linear regression models, <code>fwildclusterboot</code> supports almost all features of <code>boottest</code>. This means that a set of different bootstrap distributions, regression weights, fixed effects, and both restricted (WCR) and unrestricted (WCU) boostrap inference are supported. The main difference is that it currently only supports univariate hypothesis tests of regression paramters of the form <span class="math inline">\(H_{0}: R\beta = R\)</span> vs <span class="math inline">\(H_{1}: R\beta \neq r\)</span>, where r is scalar.</p>
+<p>For linear regression models, <code>fwildclusterboot</code> supports almost all features of <code>boottest</code>. This means that a set of different bootstrap distributions, regression weights, fixed effects, and both restricted (WCR) and unrestricted (WCU) boostrap inference are supported. The main difference is that it currently only supports univariate hypothesis tests of regression paramters of the form <span class="math inline">\(H_{0}: R\beta = r\)</span> vs <span class="math inline">\(H_{1}: R\beta \neq r\)</span>, where r is scalar.</p>
 <p>In contrast to <code>boottest</code>, <code>fwildclusterboot</code> does not support methods for instrumental variable estimation and the score bootstrap for non-linear models.</p>
 <div id="the-boottest-function" class="section level1">
 <h1>The <code>boottest()</code> function</h1>
@@ -193,7 +193,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.786   0.001    0.033     0.112</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.786   0.001    0.033     0.113</span></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_multi)</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, clustid = &quot;group_id1&quot;, param = c(&quot;treatment&quot;, </span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &quot;ideology1&quot;), B = 9999, R = c(0.6, 0.2), beta0 = 0.02)</span></span>
@@ -207,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 term estimate statistic p.value conf.low</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6*treatment+0.2*ideology1 = 0.02    0.048     2.395   0.023    0.024</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6*treatment+0.2*ideology1 = 0.02    0.048     2.395   0.026    0.024</span></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   conf.high</span></span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     0.072</span></span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
@@ -247,7 +247,7 @@ Model 2
 <td style="text-align:left;">
 </td>
 <td style="text-align:center;">
-[0.033, 0.112]
+[0.033, 0.113]
 </td>
 <td style="text-align:center;">
 </td>
@@ -259,7 +259,7 @@ Model 2
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
--0.038 (0.001)
+-0.038 (0.000)
 </td>
 </tr>
 <tr>
@@ -341,7 +341,7 @@ Log.Lik.
 </table>
 <p>A <code>plot()</code> method allows the user to inspect the bootstrap t-statistics:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boot_lm)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAYFBMVEUAAAAAADoAAGYAAP8AOjoAOpAAZrY6AAA6ADo6AGY6kNtmAABmADpmtrZmtv+QOgCQkGaQ2/+2ZgC225C2/7a2///bkDrb25Db/7bb////AAD/tmb/25D//7b//9v////ZR5FuAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAIqUlEQVR4nO2djXaiOBiGsd3WXZ21q7t1povW+7/LIQkgCMmbXwL4PudMx5/kS3xMQoCAxY0YKXJXYO5QEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEoCBAZEGFnlfDe4kwFZlLkP6t17gl2WAocjWC1Hft8I1bFrkWQao3OPUJuyJXJcht0LArclWC2IJMAZc1Bp2K4v37o6ruwT2cpyAc2KvINILOb1+Vo/fb7brfOYd7AkHfH5WWcnO8KVWO4fzGIIvAXkUmEXTdVz2rfPm8NX+dwoUJ8jL0TC1oEYLuY5BU5RjOR1Ax+tCa9W/FCs1jS9Y/D6Igh2jLEnSeZCu2YEGPUSx2KUMFeVR1PoJswrkLKoxPLaAgwPSC5Ca+QjMCpRXkbmj6iWJRzw/LYoKJ4iDW7AV15s9T7GosT5DcWVWk31kd2SI6HzZbcwsamTO4H3jNMAbVTSj9GLRMQVUnU1sxTfuhoJBwTzAGhYVzFeQY3rFICgJFLl6QJlDWMagagd++TprNk3u4RxYvqNwcq9mN9oyXa7gBSxckZoFi+qc7FOYYboiTIG0cJ0NRBYn9CCFItxPhGG7I0gU1LeiknQQ6hRuydEH1GHTWntFxDDcgjiAnQ/G3YkUhz5v6E0mQIUxGQTGgIP9wkQS51DjyVqwAx5tNUeKe9jHWPpegmrCtfKQWZBZkv0+fpIud3m2zOpZrLchswOWoUBJB2SeKwEB2Qdl3NWYu6LrP3cWQgVxjEDzc7BZuSKQxyFyIdZFLngfhKmUdg8KI0cWiJEFFrluQba3jCWqn0Z4zaZtyFy0oGuGCrCpEQXFSxRXUdDPcxS5b7UG1YEGWFc8h6PT2dX43fXibkWoqQXbpIk8Ud7dSnNUwzBTrRR0zaEFZBB1ul78+5T8t173Ql1CQ/ZBokzL6WY3rj6NZUNURN8d0glyWb9ikjTsGid34087YxWSyYpdKkMuOulXayJv507sYhuFG7LL940kF2fL9oT93RkH+4ZY+BrkdKUtztY/btzX1IH0KOK8a57SPa2uevouV4iPmO+Q6f0E3MQJnO9zhPhyiHNO3oKRX+8xckPzsYAxKerWPz/YU5Jl6K5b2Wo25CxJo7xegSHq1j9+EzDwbmlpQwhbkfJVBm81zZpFEULqrfdyvU7HKN7mgZFf7rEaQW7g+KQRNPQaFM/EY5F+kjyDZf8LWLni3oMmL9BBU3zkpbB1w4to65o48k1ZbqAwr7QO7+USCxAF7QYYleKHjoDZ/khaEDtpbhhuirW3wdmIaQdXkTxia+lqNgM0XDpJmIXnQChhXQd4TIKsgK5gHUdAdCgLhlj4GxcG5BSUteD6CfE/7RPx6xkLNR5BNuMSCxmItXlDUwkfa77IFRRme+/EeIy5aUJQNPAhIQSAgBQ0iGovsJbaO6lsd53AjguKWraIaiuwltI7oXxnHcP3aJpBTB+6IX6qgNI2nE7yJvlBB8UefXg0oCNQgq6Ao64PSCpIT0EJNQycXFLw+qFP5tKgvYWpBwas7Eredbj2yCApeH7R2QQEtqKru6w0dMYqJ7Myv+uJSjUFofdD/iyGJII/1QfdjjS43WIqE/J3V8Y6ddR5U10f+V7R1zCWo7djdv1kF1RUqurXLJ6hXkXtzSi3IdDFL8aimrq1fSSHURbZNp9ucbGMkOKvRbUHD2k5Jr8hpW5AxXHcMupNb0HzGIA3ZBfWY887qdMxxZ1XPE/zevMWuhlVcY5lp3vQfSSLvrFrFXa0gtiAE3lm1irteQQ73EnxSQXHiUhCIS0EgLgWBuBS0JigIQEEACgJQEICCABQEoCAABQEoCEBBAAoCUBAgnqCyewu05ok8kQYOz45mvF22+I6FZf+ua/WNjMvg39nrEk2QuPVH2VSsefL9Uf05mz/oaEZ57290W7VeTnE8WJ5qeXg1lFiC1BmP+re32ifqxsrG31Maz6gemH+IqZdTNhyR/OHVYGIJ6ql48GL8PsczXv7ETaBfSlns5Mk6i+/EiWiC5Ceqzyf2nlRfp6m24xnLl//2aPB6KKV+OHg1kFiCVCup20rvCTiJNp7xLLrL9wccvHrNU1oZvBpIekElHqNHBG1wO1iWIG0XQydhxzOqMcT0Ix9L62K6QfqMZkHjGdUHNA/Vg+F41oP0+Nba4nZE4xnVQhJzOxhs0Ms5b+bH53uXLb4x4/hEUSwfQbd1fJwSlnOeKIrGImf4atNTPzmrtQ7m6o5lVPe2RnZ7OdsGd57nrsZaoSAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEoCAABQHmIKjUrwAxvGWdIowZCOrcM8XhLesUgVAQIL8gsaT+7dePf8SyzXOz5uVUPTiot35u/xYLXsVj9QtxMsl1L149yBRhP+wJyC9INoLrXnzMc7PmSi5Oq56Ity5buVpf6BP/6iTXvXh1c3yCFlQLkq1CtJ7y5VP+IKVYbKgE7W7Nn8M9yb554VkEHZq1u/XS1lL0KCXocGv/tElkhurPcwmq7792EAPNy7/bMUFNkucU1CwtbJ1oWlCd6ekEtR9WLZkf62JtkucStKvdyAsQTpujajzFTr7VE9QmuQsK/QV4wAwEVZOet1+qIYhJjlqfX2yOlQbx1s+eoCZJ2+RO658HzRsKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAjwG94AFp6NG1RtAAAAAElFTkSuQmCC" /><!-- --></p>
 <!-- A note on the output in `tidy()` and `summary()`: -->
 <div id="multiway-clustering" class="section level2">
 <h2>Multiway Clustering</h2>
@@ -360,7 +360,7 @@ Log.Lik.
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40 20 251</span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.925   0.005     0.03     0.116</span></span></code></pre></div>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.925   0.004    0.031     0.115</span></span></code></pre></div>
 </div>
 <div id="choice-of-bootstrap-weights" class="section level2">
 <h2>Choice of Bootstrap Weights</h2>
@@ -401,20 +401,20 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.007)
+0.073 (0.005)
 </td>
 <td style="text-align:center;">
-0.073 (0.003)
+0.073 (0.004)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.027, 0.116]
+[0.032, 0.116]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.028, 0.117]
+[0.028, 0.116]
 </td>
 </tr>
 <tr>
@@ -523,7 +523,7 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.001)
+0.073 (0.000)
 </td>
 <td style="text-align:center;">
 0.073 (0.001)
@@ -533,7 +533,7 @@ Model 2
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.033, 0.112]
+[0.033, 0.114]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
 [0.040, 0.106]
@@ -648,17 +648,17 @@ Model 2
 0.073 (0.005)
 </td>
 <td style="text-align:center;">
-0.073 (0.010)
+0.073 (0.007)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.032, 0.111]
+[0.031, 0.111]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.029, 0.116]
+[0.027, 0.115]
 </td>
 </tr>
 <tr>
@@ -799,10 +799,10 @@ Model 2
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.032, 0.111]
+[0.031, 0.111]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.028, 0.117]
+[0.028, 0.118]
 </td>
 </tr>
 <tr>
