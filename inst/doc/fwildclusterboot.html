@@ -207,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 term estimate statistic p.value conf.low</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6*treatment+0.2*ideology1 = 0.02    0.048     2.395   0.026    0.024</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6*treatment+0.2*ideology1 = 0.02    0.048     2.395   0.025    0.024</span></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   conf.high</span></span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     0.072</span></span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
@@ -259,7 +259,7 @@ Model 2
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
--0.038 (0.000)
+-0.038 (0.001)
 </td>
 </tr>
 <tr>
@@ -268,7 +268,7 @@ Model 2
 <td style="text-align:center;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[-0.056, -0.019]
+[-0.057, -0.019]
 </td>
 </tr>
 <tr>
@@ -341,7 +341,7 @@ Log.Lik.
 </table>
 <p>A <code>plot()</code> method allows the user to inspect the bootstrap t-statistics:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boot_lm)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAYFBMVEUAAAAAADoAAGYAAP8AOjoAOpAAZrY6AAA6ADo6AGY6kNtmAABmADpmtrZmtv+QOgCQkGaQ2/+2ZgC225C2/7a2///bkDrb25Db/7bb////AAD/tmb/25D//7b//9v////ZR5FuAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAIrUlEQVR4nO2dDXejKBhGTbttdpPZdJPdycysSfP//+UIqNUEeEBAlDz3nObkQ17wFhAVtboRK1XuAiwdCgJQEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQEiCyosvBq+zEJthxzCbL89ho3KwcsORYjyON/7ZVjKYLa1jBR09MI8uo03HIsSpBfr+qWYymCbl0LW4mgU1W9f340pT1MCDdNkHpdSR90fvvVOHq/3a77nX+4AEETa/rcgj4/Gi315nhTqnzDTeqDXAJPyTGJoOu+aVn1y/db9+oXLkjQJEPPVINWIeirD5KqfMNNEFRp3zpT/lasMrx3pPxxEAV5RFuXoPMsW7EVC7qP4rLHFChoQlGXI8gpnLegyvrRAQoCzC9IbuIbDD1QWkH+huYfKFbt+LCuZhgoPsRavKDB+HmOXY1HQb4HPbLsrCrS76w+2vA/bFZyDdLYWL6gpg9qq1D6PmidgppGprZihvqTVtDy+6DAcKF9EAjvl2MBgnzD++VYqCDP4pYsyBAoq6CmB377dTJsnvzDPbB2QfXm2IxujGe8fMM9EkOQn6GogsQoUAz/TIfCPMNp8BFkjJNPkNiPEIJMOxGe4TSsXFBXg07GQaBXOA0egixhfAyl6IPOxjM6nuEeWbsgtR8hz5tOp2hBMYgjyFoojxJTECDyVqwCx5ttUWKe9gE77R779ClqUNhWPkYNAp59jgolaWKnd9ekvvkWIij7QHHpgvLvaiy7D7ruczcxXPY8guDhZr9wGqIJcl67MsdBDiWioBjL2HOkIJCjp6B+GD1xJO2Ur5sgp5I/cw1yK5DbUiUKcixPDkFdM8NN7LI1HlSbS5DbcnEFnd5+nd9tK+/SUxUsSJzvqcVZDctIsZ3UkbAGubd4lyWjn9W4/PVd/hm57oW+ZQhy2CWLflbj+u1oF9Q0xM0xnSCf6/1ddurj9kFiN/60szYxuVi1SyXI50hGBkHiUFnTDcON2GX7x5MKcuXzw3zubDZB8/dBcZitDwJ5wRynbMV8jpSludrH8781cxM7BZxXjXPax7c2z98H1WIV8x1y9W7uKEGKPujzI9vhDv/ucHZBsAYlvdpn4YLkuoM+KO3VPhM2qCDJ3FuxtNdqTBlwzClIYLxfgCLt1T6TRmT2RHMLSlqDpo1YJw8skghKeLWP93UqfTJbwtkFJbvax/9KJ6d08wvyC3dHAYLCmVnQvH2QbD9hcxfm7oNAltHnSTev57B5wKn/n35pI4+k1RYqx0z7sHZuTh13JP1NVZ0cU/BWIairQeigvWM4Dcbihm4ojOkj90FyFJjjWo11CIozA2aKoPCRhmkbWMI4KGD7Poyhj1KAoMkjRKcgFASCUNBXFOccuyTOsb1Lo40y9bRPFD8ykGuOtuWDFgwPpyluxNx1oSgIxFq3oGityxxv1YLidM/2gBQEAlIQCLh6QZHzLkpQ5Hz7sKO4axUUv/IMSzAIvlJB0XufcQkG0SlIV4KsgqLMDypYUPD8IFH2KspBMjODPOYWFDy7I23dGZVD5jS3oOD5QaULCqhBsrjwiFE8WkHm7FL1QWh+0P+rIYmgKfODqv4Rcx636IrEa9Xl/lgs1xgpxkFtgb7UVDkF9Q17+JpVUFXdq2n7oLhZOfA6KMjdAzdTC7JdzFIN1Qz65QyCVJm+CjKoTq4xEpzVGNagYQeQS9BtWKxMgsbhhn3QgGyCWhbTB5nILWjEkndW52OJO6sWyn/evMOuhlNca55pfpzek0TeWXWKW6wg1iAE3ll1iluuII97CT6poDhxKQjEpSAQl4JAXAoqCQoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASIJ6ge3gKt+yBPpIHDs9qEt8sW37GwHt91rb2RcR38nL0h0QSJW3/UXcG6D58fzcvZvqLahPLe3+i2aqOU4niwPNVy920osQSpMx7ts7f6D+rGytbnKekTqjf2BzGNUsqKIxa/+zaYWIJGKu68WP+f+oSXP3EVGOdSVzt5ss7hf+JFNEFyjdrziaMPzb/TVlp9wvrlvz3qvO5yad8+fBtILEGqlrR1ZfQBnETTJzyL5vL5ATuvUfWUVh6+DSS9oBr30RpBG1wP1iXI2MTQSVh9QtWH2B7ysbYmZuqkz2gUpE+oVtDeVT90x4vupPVba4fbEekTqokk9nrwsEGvl7yZ14/3Llt8Y0b9QFFMH0G3dbwfEtZLHiiKyiJH+GrT0344q7kO9uLqEqp7WyO7o5R9hTsvc1ejVCgIQEEACgJQEICCABQEoCAABQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEGAJQiqzTNALD85LxHGAgQN7pni8ZPzEoFQECC/IDGl/u3nt3/EtM1zN+fl1Lw5qJ9+bP8WE17Fe/WEOLnIdS++Pcglwh7sCcgvSFaC616s5rmbcyUnpzUfxE+XrZytL/SJv3aR6158uzk+QQ1qBclaIWpP/fJdPpBSTDZUgna37uXwtci+++JZBB26ubvt1NZatCgl6HDrX/pFZILm5bkEtfdfO4iO5uXfrU5Qt8hzCuqmFvZODDWoTfR0gvqVVVPmdU2sX+S5BO1aN/IChNPmqCpPtZM/jQT1i3wJCn0CPGABgppBz9tPVRHEIEfNz682x0aD+OnHSFC3SF/lTuWPg5YNBQEoCEBBAAoCUBCAggAUBKAgAAUBKAhAQQAKAlAQgIIAFASgIAAFASgIQEEACgJQEICCABQE+A1EhhXky97MewAAAABJRU5ErkJggg==" /><!-- --></p>
 <!-- A note on the output in `tidy()` and `summary()`: -->
 <div id="multiway-clustering" class="section level2">
 <h2>Multiway Clustering</h2>
@@ -404,17 +404,17 @@ Model 2
 0.073 (0.005)
 </td>
 <td style="text-align:center;">
-0.073 (0.004)
+0.073 (0.009)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.032, 0.116]
+[0.031, 0.115]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.028, 0.116]
+[0.028, 0.118]
 </td>
 </tr>
 <tr>
@@ -523,7 +523,7 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.000)
+0.073 (0.001)
 </td>
 <td style="text-align:center;">
 0.073 (0.001)
@@ -533,10 +533,10 @@ Model 2
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.033, 0.114]
+[0.034, 0.113]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.040, 0.106]
+[0.039, 0.106]
 </td>
 </tr>
 <tr>
@@ -645,20 +645,20 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.005)
+0.073 (0.004)
 </td>
 <td style="text-align:center;">
-0.073 (0.007)
+0.073 (0.008)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.111]
+[0.032, 0.110]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.027, 0.115]
+[0.027, 0.116]
 </td>
 </tr>
 <tr>
@@ -789,20 +789,20 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.005)
+0.073 (0.003)
 </td>
 <td style="text-align:center;">
-0.073 (0.009)
+0.073 (0.006)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.111]
+[0.031, 0.110]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.028, 0.118]
+[0.030, 0.116]
 </td>
 </tr>
 <tr>

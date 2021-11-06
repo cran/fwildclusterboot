@@ -69,10 +69,11 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   
   wild_draw_fun <- switch(type,
                           # note: for randemacher, create integer matrix (uses less memory than numeric)                      
-                          rademacher = function(n) dqrng::dqsample(c(-1L, 1L), n, replace = TRUE),
-                          mammen = function(n) dqrng::dqsample(c(-1, 1) * (sqrt(5) + c(-1, 1)) / 2, n, replace = TRUE, prob = (sqrt(5) + c(1, -1)) / (2 * sqrt(5))),
-                          norm = function(n) dqrng::dqrnorm(n),
-                          webb = function(n) dqrng::dqsample(c(-sqrt((3:1) / 2), sqrt((1:3) / 2)), n, replace = TRUE),
+                          rademacher = function(n) dqrng::dqsample(x = c(-1L, 1L), size = n, replace = TRUE),
+                          mammen = function(n) sample(c(-1, 1) * (sqrt(5) + c(-1, 1))/2, n, replace = TRUE,
+                                                      prob = (sqrt(5) + c(1, -1))/(2 * sqrt(5))),
+                          norm = function(n) dqrng::dqrnorm(n = n),
+                          webb = function(n) dqrng::dqsample(x = c(-sqrt((3:1) / 2), sqrt((1:3) / 2)), size = n, replace = TRUE),
                           wild_draw_fun
   )
   
@@ -105,10 +106,10 @@ boot_algo2 <- function(preprocessed_object, boot_iter, point_estimate, impose_nu
   # prepare "key" for use with collapse::fsum()
   g <- collapse::GRP(bootcluster[[1]], call = FALSE)
   
-  weights_mat <- Matrix::Diagonal(N, weights)           # if no weights - N x N identity matrix
+  #weights_mat <- Matrix::Diagonal(N, weights)           # if no weights - N x N identity matrix
   weights_sq <- sqrt(weights)                           # sqrt fine because diagonal matrix
   A <- solve(crossprod(weights_sq * X))                 # k x k
-  XXinv <- solve(crossprod(X))                          # k x k
+  #XXinv <- solve(crossprod(X))                          # k x k
   WX <- weights * X
   
   if(impose_null == TRUE){
