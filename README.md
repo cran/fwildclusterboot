@@ -45,6 +45,18 @@ restricted (WCR) and unrestricted (WCU) bootstrap inference and
 subcluster bootstrapping for few treated clusters [(MacKinnon & Webb,
 (2018))](https://academic.oup.com/ectj/article-abstract/21/2/114/5078969).
 
+If you are interested in the wild cluster bootstrap for IV models
+[(Davidson & MacKinnon,
+2010)](https://www.tandfonline.com/doi/abs/10.1198/jbes.2009.07221) or
+want to test multiple joint hypotheses, you can use the
+[wildboottestjlr](https://github.com/s3alfisc/wildboottestjlr) package,
+which is an R wrapper of the
+[WildBootTests.jl](https://github.com/droodman/WildBootTests.jl) Julia
+package. While `fwildclusterboot` is already quite fast (see the
+benchmarks below), the implementation of the wild bootstrap for OLS in
+`WildBootTests.jl` is - after compilation - orders of magnitudes faster,
+in particular for problems with a large number of clusters.
+
 <!-- The following features will be added in the future:  -->
 <!-- * support for multivariate hypotheses  -->
 <!-- * bootstrap distributions beyond the rademacher distribution -->
@@ -54,8 +66,8 @@ subcluster bootstrapping for few treated clusters [(MacKinnon & Webb,
 ``` r
 # note: for performance reasons, the sampling of the bootstrap weights of types Rademacher, Webb and Normal within
 # fwildclusterboot are handled via the dqrng package, which is installed with the
-# package as a dependency. To set a global for boottest() seed for these weight types, you must use dqrng's dqset.seed() function
-# For Mammen weights, you need to set a global seed via the set.seed() function.
+# package as a dependency. To set a global seed for boottest() for these weight types, use dqrng's dqset.seed() function
+# For Mammen weights, one can set a global seed via the set.seed() function.
 
 # set global seed for Rademacher, Webb and Normal weights
 library(dqrng)
@@ -85,7 +97,7 @@ summary(lm_boot)
 #>  Number of Clusters: 40
 #> 
 #>              term estimate statistic p.value conf.low conf.high
-#> 1 1*treatment = 0    0.079     4.123       0     0.04     0.118
+#> 1 1*treatment = 0    0.079     3.983       0     0.04     0.118
 
 library(fixest)
 feols_fit <- feols(proposition_vote ~ treatment  + log_income | Q1_immigration + Q2_defense, data = voters)
@@ -103,7 +115,7 @@ summary(feols_boot)
 #>  Number of Clusters: 40
 #> 
 #>              term estimate statistic p.value conf.low conf.high
-#> 1 1*treatment = 0    0.079     4.123       0     0.04     0.118
+#> 1 1*treatment = 0    0.079     4.117       0     0.04     0.118
 ```
 
 For a longer introduction to the package’s key function, `boottest()`,
@@ -113,8 +125,8 @@ please follow this
 ### Benchmarks
 
 Results of timing benchmarks of `boottest()`, with a sample of N =
-50000, k = 19 covariates and one cluster of dimension N\_G (10
-iterations each).
+10000, k = 20 covariates and one cluster of dimension N\_G (3 iterations
+each, median runtime is plotted).
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 

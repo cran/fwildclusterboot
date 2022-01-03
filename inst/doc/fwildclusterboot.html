@@ -193,7 +193,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.786   0.001    0.033     0.113</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.709   0.001    0.033     0.113</span></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_multi)</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, clustid = &quot;group_id1&quot;, param = c(&quot;treatment&quot;, </span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &quot;ideology1&quot;), B = 9999, R = c(0.6, 0.2), beta0 = 0.02)</span></span>
@@ -207,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40</span></span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 term estimate statistic p.value conf.low</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6*treatment+0.2*ideology1 = 0.02    0.048     2.395   0.025    0.024</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6*treatment+0.2*ideology1 = 0.02    0.048     2.346   0.024    0.024</span></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   conf.high</span></span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     0.072</span></span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
@@ -268,7 +268,7 @@ Model 2
 <td style="text-align:center;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[-0.057, -0.019]
+[-0.056, -0.019]
 </td>
 </tr>
 <tr>
@@ -341,7 +341,7 @@ Log.Lik.
 </table>
 <p>A <code>plot()</code> method allows the user to inspect the bootstrap t-statistics:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boot_lm)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <!-- A note on the output in `tidy()` and `summary()`: -->
 <div id="multiway-clustering" class="section level2">
 <h2>Multiway Clustering</h2>
@@ -360,7 +360,7 @@ Log.Lik.
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40 20 251</span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.925   0.004    0.031     0.115</span></span></code></pre></div>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.845   0.004    0.031     0.115</span></span></code></pre></div>
 </div>
 <div id="choice-of-bootstrap-weights" class="section level2">
 <h2>Choice of Bootstrap Weights</h2>
@@ -401,20 +401,20 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.005)
+0.073 (0.003)
 </td>
 <td style="text-align:center;">
-0.073 (0.009)
+0.073 (0.002)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.115]
+[0.030, 0.117]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.028, 0.118]
+[0.033, 0.113]
 </td>
 </tr>
 <tr>
@@ -533,10 +533,10 @@ Model 2
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.034, 0.113]
+[0.032, 0.114]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.039, 0.106]
+[0.040, 0.106]
 </td>
 </tr>
 <tr>
@@ -648,14 +648,14 @@ Model 2
 0.073 (0.004)
 </td>
 <td style="text-align:center;">
-0.073 (0.008)
+0.073 (0.007)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.032, 0.110]
+[0.032, 0.111]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
 [0.027, 0.116]
@@ -789,10 +789,10 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.003)
+0.073 (0.005)
 </td>
 <td style="text-align:center;">
-0.073 (0.006)
+0.073 (0.008)
 </td>
 </tr>
 <tr>
@@ -802,7 +802,7 @@ Model 2
 [0.031, 0.110]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.030, 0.116]
+[0.029, 0.117]
 </td>
 </tr>
 <tr>

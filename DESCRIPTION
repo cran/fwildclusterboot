@@ -1,8 +1,8 @@
 Package: fwildclusterboot
 Title: Fast Wild Cluster Bootstrap Inference for Linear Regression
         Models
-Version: 0.5.1
-Date: 2021-11-06
+Version: 0.7
+Date: 2022-01-03
 Authors@R: 
     c(
     person(given = "Alexander",
@@ -35,7 +35,7 @@ Authors@R:
 Description: Implementation of the fast algorithm for wild cluster bootstrap 
              inference developed in Roodman et al (2019, STATA Journal) for 
              linear regression models 
-             <https://journals.sagepub.com/doi/full/10.1177/1536867X19830877>, 
+             <doi:10.1177/1536867X19830877>, 
              which makes it feasible to quickly calculate bootstrap test 
              statistics based on a large number of bootstrap draws even for 
              large samples - as long as the number of bootstrapping clusters 
@@ -51,7 +51,7 @@ License: GPL-3
 Imports: collapse, Formula, Rcpp, dreamerr, Matrix, Matrix.utils,
         generics, gtools, dqrng
 Suggests: fixest, lfe, data.table, fabricatr, tinytest, covr, knitr,
-        rmarkdown, spelling, broom, modelsummary, RStata
+        rmarkdown, broom, modelsummary, RStata
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
@@ -59,7 +59,7 @@ LinkingTo: Rcpp, RcppEigen
 VignetteBuilder: knitr
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2021-11-06 17:12:54 UTC; alexa
+Packaged: 2022-01-03 18:22:44 UTC; alexa
 Author: Alexander Fischer [aut, cre],
   David Roodman [aut],
   Achim Zeileis [ctb] (Author of included sandwich fragments),
@@ -69,4 +69,4 @@ Author: Alexander Fischer [aut, cre],
   Sebastian Krantz [ctb]
 Maintainer: Alexander Fischer <alexander-fischer1801@t-online.de>
 Repository: CRAN
-Date/Publication: 2021-11-07 00:20:02 UTC
+Date/Publication: 2022-01-03 19:00:02 UTC

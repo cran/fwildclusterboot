@@ -22,6 +22,7 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
   check_arg(param, "character vector | character vector | NULL")
   check_arg(bootcluster, "character vector | NULL")
   check_arg(R, "numeric vector | numeric scalar")
+  # check_arg(fweights, "logical scalar")
   
   if (class(object) == "fixest") {
     of <- object$call
@@ -39,7 +40,9 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
     # combine fixed effects in formula with main formula
     # note: you get a warning here if rhs = 2 is empty (no fixed effect specified via fml)
     formula_coef_fe <- suppressWarnings(formula(Formula::as.Formula(formula), lhs = 1, rhs = c(1, 2), collapse = TRUE))
-  
+    
+    # formula: formula_coef_fe + additional cluster variables and weights. Only
+    # used to construct model.frame
     formula <- formula_coef_fe
     
     if (!is.null(eval(of$fixef))) {
@@ -47,10 +50,22 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
       formula_coef_fe <- update(formula_coef_fe, paste("~ . +", paste(eval(of$fixef), collapse = " + ")))
       formula <- formula_coef_fe
     }
+    
     # add cluster variables specified in feols-cluster and boottest-cluster arguments
     if (!is.null(eval(of$cluster))) {
-      formula <- update(formula, paste("~ . +", paste(eval(of$cluster), collapse = "+")))
+      if(class(eval(of$cluster)) == "formula"){
+        add_cluster <- unlist(strsplit(deparse(of$cluster), "[~]"))[2]
+        formula <- update(formula, paste("~ . +", paste(add_cluster, collapse = "+")))
+        } else if(class(eval(of$cluster)) == "character"){
+        formula <- update(formula, paste("~ . +", paste(eval(of$cluster), collapse = "+")))
+      } else {
+        deparse_data <- unlist(strsplit(deparse(of$data), "[$]"))
+        deparse_cluster <- unlist(strsplit(deparse(of$cluster), "[$]"))
+        add_cluster <- deparse_cluster[-(which(deparse_cluster %in% deparse_data))]
+        formula <- update(formula, paste("~ . +", paste(add_cluster, collapse = "+")))
+      }
     }
+    
     if (!is.null(cluster)) {
       formula <- update(formula, paste("~ . +", paste(cluster, collapse = "+")))
     }
@@ -66,6 +81,23 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
       formula_coef_fe <- update(formula_coef_fe, paste("~ . -", fe))
     }
     
+    # add weights
+    if (!is.null(eval(of$weights))) {
+      if(class(eval(of$weights)) == "formula"){
+        add_weights <- unlist(strsplit(deparse(of$weights), "[~]"))[2]
+        formula <- update(formula, paste("~ . +", paste(add_weights, collapse = "+")))
+        weights_fml <- formula(paste("~ -1 + ", paste(add_weights, collapse = "+")))
+      } else {
+        deparse_data <- unlist(strsplit(deparse(of$data), "[$]"))
+        deparse_weights <- unlist(strsplit(deparse(of$weights), "[$]"))
+        add_weights <-  deparse_weights[-(which(deparse_weights %in% deparse_data))]
+        formula <- update(formula, paste("~ . +", paste(add_weights, collapse = "+")))
+        weights_fml <- formula(paste("~ -1 + ", paste(add_weights, collapse = "+")))
+      }
+    } else {
+      weights_fml <- NULL
+    }
+    
     
     # if there is at least one fixed effect, get rid of intercept
     # note: length(NULL) == 0
@@ -75,7 +107,7 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
     
     of$formula <- as.call(formula)
     
-    o <- match(c("formula", "data", "weights"), names(of), 0L)
+    o <- match(c("formula", "data"), names(of), 0L)
     of <- of[c(1L, o)]
     of[[1L]] <- quote(stats::model.frame)
     # of is a data.frame that contains all variables: depvar, X, fixed effects and clusters specified
@@ -140,6 +172,23 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
       formula_coef_fe <- update(formula_coef_fe, paste("~ . -", fe))
     }
     
+    # add weights
+    if (!is.null(eval(of$weights))) {
+      if(class(eval(of$weights)) == "formula"){
+        add_weights <- unlist(strsplit(deparse(of$weights), "[~]"))[2]
+        formula <- update(formula, paste("~ . +", paste(add_weights, collapse = "+")))
+        weights_fml <- formula(paste("~ -1 + ", paste(add_weights, collapse = "+")))
+      } else {
+        deparse_data <- unlist(strsplit(deparse(of$data), "[$]"))
+        deparse_weights <- unlist(strsplit(deparse(of$weights), "[$]"))
+        add_weights <-  deparse_weights[-(which(deparse_weights %in% deparse_data))]
+        formula <- update(formula, paste("~ . +", paste(add_weights, collapse = "+")))
+        weights_fml <- formula(paste("~ -1 + ", paste(add_weights, collapse = "+")))
+      }
+    } else {
+      weights_fml <- NULL
+    }
+    
     of$formula <- as.call(formula)
     
     o <- match(c("formula", "data", "weights"), names(of), 0L)
@@ -181,6 +230,23 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
       # formula <- update(formula, paste("~ . -",fe))
     }
     
+    # add weights
+    if (!is.null(eval(of$weights))) {
+      if(class(eval(of$weights)) == "formula"){
+        add_weights <- unlist(strsplit(deparse(of$weights), "[~]"))[2]
+        formula <- update(formula, paste("~ . +", paste(add_weights, collapse = "+")))
+        weights_fml <- formula(paste("~ -1 + ", paste(add_weights, collapse = "+")))
+      } else {
+        deparse_data <- unlist(strsplit(deparse(of$data), "[$]"))
+        deparse_weights <- unlist(strsplit(deparse(of$weights), "[$]"))
+        add_weights <-  deparse_weights[-(which(deparse_weights %in% deparse_data))]
+        formula <- update(formula, paste("~ . +", paste(add_weights, collapse = "+")))
+        weights_fml <- formula(paste("~ -1 + ", paste(add_weights, collapse = "+")))
+      }
+    } else {
+      weights_fml <- NULL
+    }
+    
     of$formula <- as.call(formula)
     
     o <- match(c("formula", "data", "weights"), names(of), 0L)
@@ -188,7 +254,7 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
     
     of[[1L]] <- quote(stats::model.frame)
     of <- eval(of, parent.frame())
-
+    
     N_model <- length(residuals(object))
     model_param_names <- names(coef(object))
     
@@ -234,7 +300,7 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
       noBreaks. = TRUE
       )
     }
-  # this part of the code is superfluous, right?  
+    # this part of the code is superfluous, right?  
   } else if (na_omit == FALSE) {
     if (N_diff >= 1) {
       stop(paste(
@@ -252,10 +318,18 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
   # Step 3: assign Y, X, weights, fixed_effects, W etc.
   
   model_frame <- of
-
+  
   Y <- model.response(model_frame)
   # X: need to delete clusters
   X <- model.matrix(formula_coef_fe, model_frame)
+  
+  # create weights, is WLS
+    if(!is.null(weights_fml)){
+      weights <- as.vector(model.matrix(weights_fml, model_frame))
+    } else {
+      weights <- rep(1, N)
+    }    
+
   
   if (!is.null(fe)) {
     # note: simply update(..., -1) does not work - intercept is dropped, but all levels of other fe are kept
@@ -263,7 +337,7 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
   }
   
   k <- dim(X)[2]
-  weights <- as.vector(model.weights(of))
+  #weights <- as.vector(model.weights(of))
   
   # all null if fe = NULL
   fixed_effect <- NULL
@@ -279,9 +353,9 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
     Y <- collapse::fwithin(Y, g)
     
     fixed_effect_W <- fixed_effect[, 1]
-    if (is.null(weights)) {
+    if (is.null(weights_fml)) {
       levels(fixed_effect_W) <- (1 / table(fixed_effect)) # because duplicate levels are forbidden
-    } else if (!is.null(weights)) {
+    } else if (!is.null(weights_fml)) {
       stop("Currently, boottest() does not jointly support regression weights / WLS and fixed effects. If you want to use
             boottest() for inference based on WLS, please set fe = NULL.")
       # levels(fixed_effect_W) <- 1 / table(fixed_effect)
@@ -291,9 +365,14 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
     n_fe <- length(unique(fixed_effect[, 1]))
   }
   
-  if (is.null(weights)) {
-    weights <- rep(1, N)
-  }
+  
+  # if(fweights == TRUE){
+  #   # this does not work if weights is not a matrix of integers
+  #   if(!is.integer(weights)){
+  #     stop(paste("When fweights == TRUE, the weights column needs to be of type 'integer', but it is", class(weights), "."))
+  #   }
+  #   N <- sum(weights)
+  # }
   
   # ---------------------------------------------------------------------------- #
   # Step 4: preprocess clusters
@@ -371,7 +450,7 @@ preprocess2 <- function(object, cluster, fe, param, bootcluster, na_omit, R) {
   R0 <- rep(0, length(colnames(X)))
   R0[match(param, colnames(X))] <- R
   names(R0) <- colnames(X)
-
+  
   res <- list(
     Y = Y,
     X = X,
