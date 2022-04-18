@@ -6,15 +6,16 @@
 \usage{
 \method{boottest}{lm}(
   object,
-  clustid,
   param,
   B,
+  clustid = NULL,
   bootcluster = "max",
-  conf_int = NULL,
+  conf_int = TRUE,
   seed = NULL,
   R = NULL,
-  beta0 = 0,
-  sign_level = NULL,
+  r = 0,
+  beta0 = NULL,
+  sign_level = 0.05,
   type = "rademacher",
   impose_null = TRUE,
   p_val_type = "two-tailed",
@@ -24,36 +25,46 @@
   nthreads = getBoottest_nthreads(),
   ssc = boot_ssc(adj = TRUE, fixef.K = "none", cluster.adj = TRUE, cluster.df =
     "conventional"),
+  boot_algo = getBoottest_boot_algo(),
+  floattype = "Float64",
+  maxmatsize = FALSE,
+  bootstrapc = FALSE,
+  t_boot = FALSE,
+  getauxweights = FALSE,
   ...
 )
 }
 \arguments{
 \item{object}{An object of class lm}
 
-\item{clustid}{A character vector containing the names of the cluster variables}
-
-\item{param}{A character vector of length one. The name of the regression
-coefficient for which the hypothesis is to be tested}
+\item{param}{A character vector. The name of the regression
+coefficient(s) for which the hypothesis is to be tested}
 
 \item{B}{Integer. The number of bootstrap iterations. When the number of clusters is low,
 increasing B adds little additional runtime.}
+
+\item{clustid}{A character vector containing the names of the cluster variables. If NULL,
+a heteroskedasticity-robust (HC1) wild bootstrap is run.}
 
 \item{bootcluster}{A character vector. Specifies the bootstrap clustering variable or variables. If more
 than one variable is specified, then bootstrapping is clustered by the intersections of
 clustering implied by the listed variables. To mimic the behavior of stata's boottest command,
 the default is to cluster by the intersection of all the variables specified via the \code{clustid} argument,
 even though that is not necessarily recommended (see the paper by Roodman et al cited below, section 4.2).
-Other options include "min", where bootstrapping is clustered by the cluster variable with the fewest clusters.}
+Other options include "min", where bootstrapping is clustered by the cluster variable with the fewest clusters.
+Further, the subcluster bootstrap (MacKinnon & Webb, 2018) is supported - see the \code{vignette("fwildclusterboot", package = "fwildclusterboot")} for details.}
 
 \item{conf_int}{A logical vector. If TRUE, boottest computes confidence
-intervals by p-value inversion. If FALSE, only the p-value is returned.}
+intervals by test inversion. If FALSE, only the p-value is returned.}
 
-\item{seed}{An integer. Allows the user to set a random seed. If you want to set a "global" seed, set it via \code{dqrng::dqset.seed()}. For Mammen weights, you have to use \code{set.seed()} instead.}
+\item{seed}{An integer. Allows to set a random seed. For details, see below.}
 
 \item{R}{Hypothesis Vector giving linear combinations of coefficients. Must be either NULL or a vector of the same length as \code{param}. If NULL, a vector of ones of length param.}
 
-\item{beta0}{A numeric. Shifts the null hypothesis
-H0: param = beta0 vs H1: param != beta0}
+\item{r}{A numeric. Shifts the null hypothesis
+H0: param = r vs H1: param != r}
+
+\item{beta0}{Deprecated function argument. Replaced by function argument 'r'.}
 
 \item{sign_level}{A numeric between 0 and 1 which sets the significance level
 of the inference procedure. E.g. sign_level = 0.05
@@ -95,6 +106,22 @@ to use. The default is to use 1 core.}
 \item{ssc}{An object of class \code{boot_ssc.type} obtained with the function \code{\link[fwildclusterboot]{boot_ssc}}. Represents how the small sample adjustments are computed. The defaults are \verb{adj = TRUE, fixef.K = "none", cluster.adj = "TRUE", cluster.df = "conventional"}.
 You can find more details in the help file for \code{boot_ssc()}. The function is purposefully designed to mimic fixest's \code{\link[fixest]{ssc}} function.}
 
+\item{boot_algo}{Character scalar. Either "R" or "WildBootTests.jl". Controls the algorithm employed by boottest().
+"R" is the default and implements the cluster bootstrap as in Roodman (2019). "WildBootTests.jl" executes the wild cluster bootstrap via the WildBootTests.jl
+package. For it to run, Julia and WildBootTests.jl need to be installed.
+Note that if no cluster is provided, boottest() always defaults to the "lean" algorithm. You can set the employed algorithm globally by using the
+\code{setBoottest_boot_algo()} function.}
+
+\item{floattype}{Float64 by default. Other option: Float32. Should floating point numbers in Julia be represented as 32 or 64 bit? Only relevant when 'boot_algo = "WildBootTests.jl"'}
+
+\item{maxmatsize}{NULL by default = no limit. Else numeric scalar to set the maximum size of auxilliary weight matrix (v), in gigabytes. Only relevant when 'boot_algo = "WildBootTests.jl"'}
+
+\item{bootstrapc}{Logical scalar, FALSE by default. TRUE  to request bootstrap-c instead of bootstrap-t. Only relevant when 'boot_algo = "WildBootTests.jl"'}
+
+\item{t_boot}{Logical. Should bootstrapped t-statistics be returned?}
+
+\item{getauxweights}{Logical. Whether to save auxilliary weight matrix (v)}
+
 \item{...}{Further arguments passed to or from other methods.}
 }
 \value{
@@ -105,29 +132,46 @@ An object of class \code{boottest}
 \item{param}{The tested parameter.}
 \item{N}{Sample size. Might differ from the regression sample size if
 the cluster variables contain NA values.}
-\item{B}{Number of Bootstrap Iterations.}
+\item{boot_iter}{Number of Bootstrap Iterations.}
 \item{clustid}{Names of the cluster Variables.}
 \item{N_G}{Dimension of the cluster variables as used in boottest.}
 \item{sign_level}{Significance level used in boottest.}
 \item{type}{Distribution of the bootstrap weights.}
 \item{impose_null}{Whether the null was imposed on the bootstrap dgp or not.}
-\item{R}{The vector "R" in the null hypothesis of interest Rbeta = beta0.}
-\item{beta0}{The scalar "beta0" in the null hypothesis of interest Rbeta = beta0.}
+\item{R}{The vector "R" in the null hypothesis of interest Rbeta = r.}
+\item{r}{The scalar "r" in the null hypothesis of interest Rbeta = r.}
 \item{point_estimate}{R'beta. A scalar: the constraints vector times the regression coefficients.}
-\item{p_test_vals}{All p-values calculated while calculating the confidence
+\item{grid_vals}{All t-statistics calculated while calculating the
+confidence interval.}
+\item{p_grid_vals}{All p-values calculated while calculating the confidence
 interval.}
 \item{t_stat}{The 'original' regression test statistics.}
-\item{test_vals}{All t-statistics calculated while calculating the
-confidence interval.}
 \item{t_boot}{All bootstrap t-statistics.}
 \item{regression}{The regression object used in boottest.}
 \item{call}{Function call of boottest.}
+\item{boot_algo}{The employed bootstrap algorithm.}
+\item{nthreads}{The number of threads employed.}
+\item{internal_seed}{The integer value -inherited from set.seed() - used within boottest() to set the random seed in either R or Julia. If NULL, no internal seed was created.}
 }
 \description{
 \code{boottest.lm} is a S3 method that allows for fast wild cluster
 bootstrap inference for objects of class lm by  implementing
 the fast wild bootstrap algorithm developed in Roodman et al., 2019.
 }
+\section{Setting Seeds}{
+
+To guarantee reproducibility, you can either use \verb{boottest()'s} \code{seed} function argument, or
+set a global random seed via
+\itemize{
+\item \code{set.seed()} when using
+\enumerate{
+\item the lean algorithm (via \code{boot_algo = "R-lean"}), 2) the heteroskedastic wild bootstrap
+\item the wild cluster bootstrap via \code{boot_algo = "R"} with Mammen weights or 4) \code{boot_algo = "WildBootTests.jl"}
+}
+\item \code{dqrng::dqset.seed()} when using \code{boot_algo = "R"} for Rademacher, Webb or Normal weights
+}
+}
+
 \section{Confidence Intervals}{
 
 \code{boottest} computes confidence intervals by inverting p-values.
@@ -151,34 +195,42 @@ stops the procedure after 10 iterations.
 }
 
 \examples{
+\dontrun{
 library(fwildclusterboot)
 data(voters)
-lm_fit <-lm(proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration,
-         data = voters)
-boot1 <- boottest(lm_fit, 
-                  B = 9999, 
-                  param = "treatment",
-                   clustid = "group_id1")
+lm_fit <- lm(proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration,
+  data = voters
+)
+boot1 <- boottest(lm_fit,
+  B = 9999,
+  param = "treatment",
+  clustid = "group_id1"
+)
 boot2 <- boottest(lm_fit,
-                  B = 9999,
-                  param = "treatment",
-                 clustid = c("group_id1", "group_id2"))
+  B = 9999,
+  param = "treatment",
+  clustid = c("group_id1", "group_id2")
+)
 boot3 <- boottest(lm_fit,
-                  B = 9999,
-                  param = "treatment",
-                  clustid = c("group_id1", "group_id2"),
-                  sign_level = 0.2,
-                  seed = 8,
-                  beta0 = 2)
-# test treatment + ideology1 = 2                   
-boot4 <- boottest(lm_fit, 
-                  B = 9999, 
-                  clustid = c("group_id1", "group_id2"),
-                  param = c("treatment", "ideology1"),
-                  R = c(1, 1), 
-                  beta0 = 2)
+  B = 9999,
+  param = "treatment",
+  clustid = c("group_id1", "group_id2"),
+  sign_level = 0.2,
+  seed = 8,
+  r = 2
+)
+# test treatment + ideology1 = 2
+boot4 <- boottest(lm_fit,
+  B = 9999,
+  clustid = c("group_id1", "group_id2"),
+  param = c("treatment", "ideology1"),
+  R = c(1, 1),
+  r = 2
+)
 summary(boot1)
 plot(boot1)
+}
+
 }
 \references{
 Roodman et al., 2019, "Fast and wild: Bootstrap inference in

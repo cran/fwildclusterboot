@@ -1,6 +1,94 @@
+# fwildclusterboot 0.8
+
+
+### Two new bootstrap algorithms: 'WildBootTests.jl' and 'R-lean'
+
+#### boot_algo = 'WildBootTests.jl'
+
++ `fwildclusterboot` now supports calling [WildBootTests.jl](https://github.com/droodman/WildBootTests.jl), which is a very fast Julia implementation of the wild cluster bootstrap algorithm. To do so, a new function argument is introduced, `boot_algo`, through which it is possible to control the executed bootstrap algorithm. 
+
+```{r}
+# load data set voters included in fwildclusterboot
+data(voters)
+# estimate the regression model via lm
+lm_fit <- lm(proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration , data = voters)
+boot_lm <- boottest(
+  lm_fit, 
+  clustid = "group_id1", 
+  param = "treatment", 
+  B = 9999, 
+  boot_algo = "WildBootTests.jl"
+)
+```
++ WildBootTests.jl is (after compilation) orders of magnitudes faster than `fwildclusterboot's` native R implementation, and speed gains are particularly pronounced for large problems with a large number of clusters and many bootstrap iterations. 
+
++ Furthermore, `WildBootTests.jl` supports a range of models and tests that were previously not supported by `fwildclusterboot`: most importantly a) wild cluster bootstrap tests of multiple joint hypotheses and b) the WRE bootstrap by Davidson & MacKinnon for instrumental variables estimation. On top of the cake ... the WRE is really fast. 
+
+```{r}
+library(ivreg)
+data("SchoolingReturns", package = "ivreg")
+# drop all NA values from SchoolingReturns
+SchoolingReturns <- SchoolingReturns[rowMeans(sapply(SchoolingReturns, is.na)) == 0,]
+ivreg_fit <- ivreg(log(wage) ~ education + age + ethnicity + smsa + south + parents14 |
+                           nearcollege + age  + ethnicity + smsa + south + parents14, data = SchoolingReturns)
+
+boot_ivreg <- boottest(
+  object = ivreg_fit,
+  B = 999,
+  param = "education",
+  clustid = "kww",
+  type = "mammen",
+  impose_null = TRUE
+)
+generics::tidy(boot_ivreg)
+#              term  estimate statistic   p.value    conf.low conf.high
+# 1 1*education = 0 0.0638822  1.043969 0.2482482 -0.03152655 0.2128746
+```
+
++ For guidance on how to install and run `WildBooTests.jl`, have a look at the associated [article](https://s3alfisc.github.io/fwildclusterboot/articles/WildBootTests.html).
+
++ Also, note that running the wild cluster bootstrap through `WildBootTests.jl` is often very memory-efficient.
+
+
+#### boot_algo = 'R-lean' 
+
+A key limitation of the vectorized 'fast' cluster bootstrap algorithm as implemented in `fwildclusterboot` is that it is very memory-demanding. For 'larger' problems, running `boottest()` might lead to out-of-memory errors. To offer an alternative, `boottest()` now ships a 'new' rcpp- and loop-based implementation of the wild cluster bootstrap (the 'wild2' algorithm in Roodman et al).
+
+```{r}
+boot_lm <- boottest(
+  lm_fit, 
+  clustid = "group_id1", 
+  param = "treatment", 
+  B = 9999, 
+  boot_algo = "R-lean"
+)
+```
+
+### Heteroskeadstic Wild Bootstrap 
+
+It is now possible to run `boottest()` without specifying a `clustid` function argument. In this case, `boottest()` runs a heteroskedasticity-robust wild bootstrap (HC1), which is implemented in c++. 
+
+```{r}
+boot_hc1 <- boottest(lm_fit, param = "treatment", B = 9999)
+summary(boot_hc1)
+```
+
+### `boottest()` function argument `beta0` deprecated
+
+For consistency with `WildBootTests.jl`, the `boottest()` function argument `beta0` is now replaced by a new function argument, `r`. 
+
+### Frühjahrsputz
+
+I have spent some time to clean up `fwildclusterboot's` internals, which should now hopefully be more readable and easier to maintain. 
+
+### Testing
+
+`fwildclusterboot` is now pre-dominantly tested against `WildBootTests.jl`. Tests that depend on Julia are by default not run on CRAN, but are regularly run on Mac, Windows and Linux via [github actions](https://github.com/s3alfisc/fwildclusterboot/actions/workflows/R-CMD-check.yaml).
+
+
 # fwildclusterboot 0.7
 
-+ Bug fixes, see issues (#26)[https://github.com/s3alfisc/fwildclusterboot/issues/26] and (#27)[https://github.com/s3alfisc/fwildclusterboot/issues/27] regarding preprocessing for fixest when weights are passed to feols() as a formula or when cluster is specified in fixest as a column vector. 
++ Bug fixes, see issues [#26](https://github.com/s3alfisc/fwildclusterboot/issues/26) and [#27](https://github.com/s3alfisc/fwildclusterboot/issues/27) regarding preprocessing for fixest when weights are passed to feols() as a formula or when cluster is specified in fixest as a column vector. 
 
 
 # fwildclusterboot 0.6
@@ -39,6 +127,7 @@ Prior to v 0.6, by default, no small sample adjustments regarding the sample siz
 + New feature II: `boottest()` now also supports "equal-tailed" p-values and one-sided hypotheses. For one-sided tests, confidence intervals are currently not supported. 
 + Internal changes: To allow for multivariable tests, the `boot_algo2()` function has slightly been modified. `invert_p_val2()` is superseded by `invert_p_val()`. 
 + Further, a CRAN error is fixed - some tests for exact equality failed with relative difference e-05 on openBLAS. In consequence, all exact tests are set to reltol = 1e-04. 
++ Make better use of functionality of `dreamerr` package. 
 
 # fwildclusterboot 0.3.7
 
