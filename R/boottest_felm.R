@@ -6,20 +6,20 @@
 #' implemented in the STATA package `boottest`.
 #'
 #' @param object An object of class felm
-#' @param clustid A character vector containing the names of the cluster variables. If NULL, 
+#' @param clustid A character vector or rhs formula containing the names of the cluster variables. If NULL, 
 #'        a heteroskedasticity-robust (HC1) wild bootstrap is run. 
-#' @param param A character vector. The name of the regression
+#' @param param A character vector or rhs formula. The name of the regression
 #'        coefficient(s) for which the hypothesis is to be tested
 #' @param B Integer. The number of bootstrap iterations. When the number of clusters is low,
 #'        increasing B adds little additional runtime.
-#' @param bootcluster A character vector. Specifies the bootstrap clustering variable or variables. If more
+#' @param bootcluster A character vector or rhs formula of length 1. Specifies the bootstrap clustering variable or variables. If more
 #'        than one variable is specified, then bootstrapping is clustered by the intersections of
 #'        clustering implied by the listed variables. To mimic the behavior of stata's boottest command,
 #'        the default is to cluster by the intersection of all the variables specified via the `clustid` argument,
 #'        even though that is not necessarily recommended (see the paper by Roodman et al cited below, section 4.2).
 #'        Other options include "min", where bootstrapping is clustered by the cluster variable with the fewest clusters.
 #'        Further, the subcluster bootstrap (MacKinnon & Webb, 2018) is supported - see the \code{vignette("fwildclusterboot", package = "fwildclusterboot")} for details.
-#' @param fe A character vector of length one which contains the name of the fixed effect to be projected
+#' @param fe A character vector or rhs formula of length one which contains the name of the fixed effect to be projected
 #'        out in the bootstrap. Note: if regression weights are used, fe
 #'        needs to be NULL.
 #' @param sign_level A numeric between 0 and 1 which sets the significance level
@@ -55,10 +55,6 @@
 #'        1e-6 by default.
 #' @param maxiter Integer. Maximum number of iterations used in the root finding procedure to find the confidence interval.
 #'        10 by default.
-#' @param na_omit Logical. If TRUE, `boottest()` omits rows with missing
-#'        variables in the cluster variable that have not previously been deleted
-#'        when fitting the regression object (e.g. if the cluster variable was not used
-#'        when fitting the regression model).
 #' @param nthreads The number of threads. Can be: a) an integer lower than,
 #'                 or equal to, the maximum number of threads; b) 0: meaning
 #'                 all available threads will be used; c) a number strictly
@@ -117,8 +113,9 @@
 #' To guarantee reproducibility, you can either use `boottest()'s` `seed` function argument, or 
 #' set a global random seed via 
 #' + `set.seed()` when using
-#'    1) the lean algorithm (via `boot_algo = "R-lean"`), 2) the heteroskedastic wild bootstrap 
-#'    3) the wild cluster bootstrap via `boot_algo = "R"` with Mammen weights or 4) `boot_algo = "WildBootTests.jl"`
+#'    1) the lean algorithm (via `boot_algo = "R-lean"`) including the heteroskedastic wild bootstrap 
+#'    2) the wild cluster bootstrap via `boot_algo = "R"` with Mammen weights or 
+#'    3) `boot_algo = "WildBootTests.jl"`
 #' + `dqrng::dqset.seed()` when using `boot_algo = "R"` for Rademacher, Webb or Normal weights
 #' 
 #' @section Confidence Intervals:
@@ -209,7 +206,6 @@ boottest.felm <- function(object,
                           p_val_type = "two-tailed",
                           tol = 1e-6,
                           maxiter = 10,
-                          na_omit = TRUE,
                           nthreads = getBoottest_nthreads(),
                           ssc = boot_ssc(
                             adj = TRUE,
@@ -230,8 +226,8 @@ boottest.felm <- function(object,
 
   # Step 1: check arguments of felm call
   check_arg(object, "MBT class(felm)")
-  check_arg(clustid, "NULL | character scalar | character vector")
-  check_arg(param, "MBT scalar character | character vector")
+  check_arg(clustid, "NULL | character scalar | character vector | formula")
+  check_arg(param, "MBT scalar character | character vector | formula")
   check_arg(B, "MBT scalar integer GT{99}")
   check_arg(sign_level, "scalar numeric GT{0} LT{1}")
   check_arg(type, "charin(rademacher, mammen, norm, gamma, webb)")
@@ -242,8 +238,8 @@ boottest.felm <- function(object,
   check_arg(internal_seed, "scalar logical")
   check_arg(R, "NULL| scalar numeric | numeric vector")
   check_arg(r, "numeric scalar | NULL")
-  check_arg(fe, "character scalar | NULL")
-  check_arg(bootcluster, "character vector")
+  check_arg(fe, "character scalar | NULL |formula ")
+  check_arg(bootcluster, "character vector | formula")
   check_arg(tol, "numeric scalar GT{0}")
   check_arg(maxiter, "scalar integer GT{5}")
   check_arg(boot_ssc, "class(ssc) | class(boot_ssc)")
@@ -255,6 +251,22 @@ boottest.felm <- function(object,
 
   if(!is.null(beta0)){
     stop("The function argument 'beta0' is deprecated. Please use the function argument 'r' instead, by which it is replaced.")
+  }
+
+  if(inherits(clustid, "formula")){
+    clustid <- attr(terms(clustid), "term.labels")
+  }
+  
+  if(inherits(bootcluster, "formula")){
+    bootcluster <- attr(terms(bootcluster), "term.labels")
+  }
+  
+  if(inherits(param, "formula")){
+    param <- attr(terms(param), "term.labels")
+  }
+  
+  if(inherits(fe, "formula")){
+    fe <- attr(terms(fe), "term.labels")
   }
   
   internal_seed <- set_seed(
@@ -298,22 +310,19 @@ boottest.felm <- function(object,
     param = param,
     sign_level = sign_level,
     B = B,
-    clustid = clustid,
     fe = fe
   )
 
-  # preprocess the data: Y, X, weights, fixed_effect
-  preprocess <- preprocess(
-    object = object,
-    cluster = clustid,
-    fe = fe,
-    param = param,
-    bootcluster = bootcluster,
-    na_omit = na_omit,
-    R = R,
+  preprocess <- preprocess2.felm(
+    object = object, 
+    clustid = clustid, 
+    R = R, 
+    param = param, 
+    bootcluster = bootcluster, 
+    fe = fe, 
     boot_algo = boot_algo
   )
-
+  
   enumerate <-
     check_set_full_enumeration(
       preprocess = preprocess,
@@ -326,7 +335,7 @@ boottest.felm <- function(object,
   B <- enumerate$B
 
   N <- preprocess$N
-  k <- length(coef(object))
+  k <- preprocess$k
   G <- vapply(preprocess$clustid, function(x) length(unique(x)), numeric(1))
   vcov_sign <- preprocess$vcov_sign
   small_sample_correction <- get_ssc(boot_ssc_object = ssc, N = N, k = k, G = G, vcov_sign = vcov_sign, heteroskedastic = heteroskedastic)

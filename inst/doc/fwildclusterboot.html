@@ -15,9 +15,243 @@
 
 <title>fwildclusterboot</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
-<script src="data:application/javascript;base64,JChkb2N1bWVudCkucmVhZHkoZnVuY3Rpb24oKXsKICAgIGlmICh0eXBlb2YgJCgnW2RhdGEtdG9nZ2xlPSJ0b29sdGlwIl0nKS50b29sdGlwID09PSAnZnVuY3Rpb24nKSB7CiAgICAgICAgJCgnW2RhdGEtdG9nZ2xlPSJ0b29sdGlwIl0nKS50b29sdGlwKCk7CiAgICB9CiAgICBpZiAoJCgnW2RhdGEtdG9nZ2xlPSJwb3BvdmVyIl0nKS5wb3BvdmVyID09PSAnZnVuY3Rpb24nKSB7CiAgICAgICAgJCgnW2RhdGEtdG9nZ2xlPSJwb3BvdmVyIl0nKS5wb3BvdmVyKCk7CiAgICB9Cn0pOwo="></script>
-<link href="data:text/css,%0A%2Elightable%2Dminimal%20%7B%0Aborder%2Dcollapse%3A%20separate%3B%0Aborder%2Dspacing%3A%2016px%201px%3B%0Awidth%3A%20100%25%3B%0Amargin%2Dbottom%3A%2010px%3B%0A%7D%0A%2Elightable%2Dminimal%20td%20%7B%0Amargin%2Dleft%3A%205px%3B%0Amargin%2Dright%3A%205px%3B%0A%7D%0A%2Elightable%2Dminimal%20th%20%7B%0Amargin%2Dleft%3A%205px%3B%0Amargin%2Dright%3A%205px%3B%0A%7D%0A%2Elightable%2Dminimal%20thead%20tr%3Alast%2Dchild%20th%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%2300000050%3B%0Aempty%2Dcells%3A%20hide%3B%0A%7D%0A%2Elightable%2Dminimal%20tbody%20tr%3Afirst%2Dchild%20td%20%7B%0Apadding%2Dtop%3A%200%2E5em%3B%0A%7D%0A%2Elightable%2Dminimal%2Elightable%2Dhover%20tbody%20tr%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23f5f5f5%3B%0A%7D%0A%2Elightable%2Dminimal%2Elightable%2Dstriped%20tbody%20tr%3Anth%2Dchild%28even%29%20%7B%0Abackground%2Dcolor%3A%20%23f5f5f5%3B%0A%7D%0A%2Elightable%2Dclassic%20%7B%0Aborder%2Dtop%3A%200%2E16em%20solid%20%23111111%3B%0Aborder%2Dbottom%3A%200%2E16em%20solid%20%23111111%3B%0Awidth%3A%20100%25%3B%0Amargin%2Dbottom%3A%2010px%3B%0Amargin%3A%2010px%205px%3B%0A%7D%0A%2Elightable%2Dclassic%20tfoot%20tr%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A%2Elightable%2Dclassic%20tfoot%20tr%3Afirst%2Dchild%20td%20%7B%0Aborder%2Dtop%3A%200%2E14em%20solid%20%23111111%3B%0A%7D%0A%2Elightable%2Dclassic%20caption%20%7B%0Acolor%3A%20%23222222%3B%0A%7D%0A%2Elightable%2Dclassic%20td%20%7B%0Apadding%2Dleft%3A%205px%3B%0Apadding%2Dright%3A%205px%3B%0Acolor%3A%20%23222222%3B%0A%7D%0A%2Elightable%2Dclassic%20th%20%7B%0Apadding%2Dleft%3A%205px%3B%0Apadding%2Dright%3A%205px%3B%0Afont%2Dweight%3A%20normal%3B%0Acolor%3A%20%23222222%3B%0A%7D%0A%2Elightable%2Dclassic%20thead%20tr%3Alast%2Dchild%20th%20%7B%0Aborder%2Dbottom%3A%200%2E10em%20solid%20%23111111%3B%0A%7D%0A%2Elightable%2Dclassic%2Elightable%2Dhover%20tbody%20tr%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23F9EEC1%3B%0A%7D%0A%2Elightable%2Dclassic%2Elightable%2Dstriped%20tbody%20tr%3Anth%2Dchild%28even%29%20%7B%0Abackground%2Dcolor%3A%20%23f5f5f5%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20%7B%0Aborder%2Dtop%3A%203px%20double%20%23111111%3B%0Aborder%2Dbottom%3A%203px%20double%20%23111111%3B%0Awidth%3A%20100%25%3B%0Amargin%2Dbottom%3A%2010px%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20tfoot%20tr%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20tfoot%20tr%3Afirst%2Dchild%20td%20%7B%0Aborder%2Dtop%3A%203px%20double%20%23111111%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20caption%20%7B%0Acolor%3A%20%23222222%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20td%20%7B%0Apadding%2Dleft%3A%205px%3B%0Apadding%2Dright%3A%205px%3B%0Acolor%3A%20%23222222%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20th%20%7B%0Apadding%2Dleft%3A%205px%3B%0Apadding%2Dright%3A%205px%3B%0Afont%2Dweight%3A%20normal%3B%0Acolor%3A%20%23222222%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20tbody%20tr%3Alast%2Dchild%20td%20%7B%0Aborder%2Dbottom%3A%203px%20double%20%23111111%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%20thead%20tr%3Alast%2Dchild%20th%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23111111%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%2Elightable%2Dhover%20tbody%20tr%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23F9EEC1%3B%0A%7D%0A%2Elightable%2Dclassic%2D2%2Elightable%2Dstriped%20tbody%20tr%3Anth%2Dchild%28even%29%20%7B%0Abackground%2Dcolor%3A%20%23f5f5f5%3B%0A%7D%0A%2Elightable%2Dmaterial%20%7B%0Amin%2Dwidth%3A%20100%25%3B%0Awhite%2Dspace%3A%20nowrap%3B%0Atable%2Dlayout%3A%20fixed%3B%0Afont%2Dfamily%3A%20Roboto%2C%20sans%2Dserif%3B%0Aborder%3A%201px%20solid%20%23EEE%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0Amargin%2Dbottom%3A%2010px%3B%0A%7D%0A%2Elightable%2Dmaterial%20tfoot%20tr%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A%2Elightable%2Dmaterial%20tfoot%20tr%3Afirst%2Dchild%20td%20%7B%0Aborder%2Dtop%3A%201px%20solid%20%23EEE%3B%0A%7D%0A%2Elightable%2Dmaterial%20th%20%7B%0Aheight%3A%2056px%3B%0Apadding%2Dleft%3A%2016px%3B%0Apadding%2Dright%3A%2016px%3B%0A%7D%0A%2Elightable%2Dmaterial%20td%20%7B%0Aheight%3A%2052px%3B%0Apadding%2Dleft%3A%2016px%3B%0Apadding%2Dright%3A%2016px%3B%0Aborder%2Dtop%3A%201px%20solid%20%23eeeeee%3B%0A%7D%0A%2Elightable%2Dmaterial%2Elightable%2Dhover%20tbody%20tr%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23f5f5f5%3B%0A%7D%0A%2Elightable%2Dmaterial%2Elightable%2Dstriped%20tbody%20tr%3Anth%2Dchild%28even%29%20%7B%0Abackground%2Dcolor%3A%20%23f5f5f5%3B%0A%7D%0A%2Elightable%2Dmaterial%2Elightable%2Dstriped%20tbody%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A%2Elightable%2Dmaterial%2Elightable%2Dstriped%20thead%20tr%3Alast%2Dchild%20th%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ddd%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%20%7B%0Amin%2Dwidth%3A%20100%25%3B%0Awhite%2Dspace%3A%20nowrap%3B%0Atable%2Dlayout%3A%20fixed%3B%0Afont%2Dfamily%3A%20Roboto%2C%20sans%2Dserif%3B%0Aborder%3A%201px%20solid%20%23FFFFFF12%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0Amargin%2Dbottom%3A%2010px%3B%0Abackground%2Dcolor%3A%20%23363640%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%20tfoot%20tr%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%20tfoot%20tr%3Afirst%2Dchild%20td%20%7B%0Aborder%2Dtop%3A%201px%20solid%20%23FFFFFF12%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%20th%20%7B%0Aheight%3A%2056px%3B%0Apadding%2Dleft%3A%2016px%3B%0Apadding%2Dright%3A%2016px%3B%0Acolor%3A%20%23FFFFFF60%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%20td%20%7B%0Aheight%3A%2052px%3B%0Apadding%2Dleft%3A%2016px%3B%0Apadding%2Dright%3A%2016px%3B%0Acolor%3A%20%23FFFFFF%3B%0Aborder%2Dtop%3A%201px%20solid%20%23FFFFFF12%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%2Elightable%2Dhover%20tbody%20tr%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF12%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%2Elightable%2Dstriped%20tbody%20tr%3Anth%2Dchild%28even%29%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF12%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%2Elightable%2Dstriped%20tbody%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A%2Elightable%2Dmaterial%2Ddark%2Elightable%2Dstriped%20thead%20tr%3Alast%2Dchild%20th%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23FFFFFF12%3B%0A%7D%0A%2Elightable%2Dpaper%20%7B%0Awidth%3A%20100%25%3B%0Amargin%2Dbottom%3A%2010px%3B%0Acolor%3A%20%23444%3B%0A%7D%0A%2Elightable%2Dpaper%20tfoot%20tr%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A%2Elightable%2Dpaper%20tfoot%20tr%3Afirst%2Dchild%20td%20%7B%0Aborder%2Dtop%3A%201px%20solid%20%2300000020%3B%0A%7D%0A%2Elightable%2Dpaper%20thead%20tr%3Alast%2Dchild%20th%20%7B%0Acolor%3A%20%23666%3B%0Avertical%2Dalign%3A%20bottom%3B%0Aborder%2Dbottom%3A%201px%20solid%20%2300000020%3B%0Aline%2Dheight%3A%201%2E15em%3B%0Apadding%3A%2010px%205px%3B%0A%7D%0A%2Elightable%2Dpaper%20td%20%7B%0Avertical%2Dalign%3A%20middle%3B%0Aborder%2Dbottom%3A%201px%20solid%20%2300000010%3B%0Aline%2Dheight%3A%201%2E15em%3B%0Apadding%3A%207px%205px%3B%0A%7D%0A%2Elightable%2Dpaper%2Elightable%2Dhover%20tbody%20tr%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23F9EEC1%3B%0A%7D%0A%2Elightable%2Dpaper%2Elightable%2Dstriped%20tbody%20tr%3Anth%2Dchild%28even%29%20%7B%0Abackground%2Dcolor%3A%20%2300000008%3B%0A%7D%0A%2Elightable%2Dpaper%2Elightable%2Dstriped%20tbody%20td%20%7B%0Aborder%3A%200%3B%0A%7D%0A" rel="stylesheet" />
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -129,7 +363,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -147,14 +561,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fwildclusterboot)</span></code></pre></div>
-<p>The <code>fwildclusterboot</code> package implements the “fast” wild cluster bootstrap algorithm developed in Roodman et al (2019) for regression objects in R. The “fast” algorithm makes it feasible to calculate test statistics based on a large number of bootstrap draws even for large samples - as long as the number of bootstrapping clusters is not too large.</p>
-<p>For linear regression models, <code>fwildclusterboot</code> supports almost all features of Stata’s <code>boottest</code> package. This means that a set of different bootstrap distributions, regression weights, fixed effects, and both restricted (WCR) and unrestricted (WCU) bootstrap inference are supported. The main difference is that it currently only supports univariate hypothesis tests of regression paramters of the form <span class="math inline">\(H_{0}: R\beta = r\)</span> vs <span class="math inline">\(H_{1}: R\beta \neq r\)</span>, where r is scalar.</p>
-<p>Further, <code>fwildclusterboot</code> serves as an R port to <a href="https://github.com/droodman/WildBootTests.jl">WildBootTests.jl</a>, which implements the fast wild cluster bootstrap in Julia at extreme speed. Beyond being significantly faster than <code>fwildclusterboot&#39;s</code> native R implementation of the wild cluster bootstrap for OLS (in particular for more demanding problems), <code>WildBootTests.jl</code> offers support for the WRE bootstrap for IV models (<a href="https://www.tandfonline.com/doi/abs/10.1198/jbes.2009.07221">(Davidson &amp; MacKinnon, 2010)</a>) and functionality for tests of multiple hypothesis.</p>
-<p>A description of the “fast” algorithm is beyond the scope of this vignette. It is very clearly presented in <a href="https://econpapers.repec.org/paper/qedwpaper/1406.htm">Roodman et al. (2019)</a>. For technical details of the implementation in <code>fwildclusterboot</code>, have a look at the <code>technical vignette</code> (tba).</p>
+<p>The <code>fwildclusterboot</code> package implements the “fast” wild
+cluster bootstrap algorithm developed in Roodman et al (2019) for
+regression objects in R. The “fast” algorithm makes it feasible to
+calculate test statistics based on a large number of bootstrap draws
+even for large samples - as long as the number of bootstrapping clusters
+is not too large.</p>
+<p>For linear regression models, <code>fwildclusterboot</code> supports
+almost all features of Stata’s <code>boottest</code> package. This means
+that a set of different bootstrap distributions, regression weights,
+fixed effects, and both restricted (WCR) and unrestricted (WCU)
+bootstrap inference are supported. The main difference is that it
+currently only supports univariate hypothesis tests of regression
+paramters of the form <span class="math inline">\(H_{0}: R\beta =
+r\)</span> vs <span class="math inline">\(H_{1}: R\beta \neq r\)</span>,
+where r is scalar.</p>
+<p>Further, <code>fwildclusterboot</code> serves as an R port to <a href="https://github.com/droodman/WildBootTests.jl">WildBootTests.jl</a>,
+which implements the fast wild cluster bootstrap in Julia at extreme
+speed. Beyond being significantly faster than
+<code>fwildclusterboot&#39;s</code> native R implementation of the wild
+cluster bootstrap for OLS (in particular for more demanding problems),
+<code>WildBootTests.jl</code> offers support for the WRE bootstrap for
+IV models (<a href="https://www.tandfonline.com/doi/abs/10.1198/jbes.2009.07221">(Davidson
+&amp; MacKinnon, 2010)</a>) and functionality for tests of multiple
+hypothesis.</p>
+<p>A description of the “fast” algorithm is beyond the scope of this
+vignette. It is very clearly presented in <a href="https://econpapers.repec.org/paper/qedwpaper/1406.htm">Roodman et
+al. (2019)</a>. For technical details of the implementation in
+<code>fwildclusterboot</code>, have a look at the
+<code>technical vignette</code> (tba).</p>
 <div id="the-boottest-function" class="section level1">
 <h1>The <code>boottest()</code> function</h1>
-<p>The <code>fwildclusterboot</code> package consists of one key function, <code>boottest()</code>. It implements the fast wild bootstrap and works with regression objects of type <code>lm</code>, <code>felm</code> and <code>fixest</code> from base R and the <code>lfe</code> and <code>fixest</code> packages.</p>
-<p>To start, we create a random data set with two cluster variables (group_id1 &amp; group_id2), two fixed effects and a set of covariates. The <code>icc_</code> arguments control the cluster variable’s intra-cluster correlation.</p>
+<p>The <code>fwildclusterboot</code> package consists of one key
+function, <code>boottest()</code>. It implements the fast wild bootstrap
+and works with regression objects of type <code>lm</code>,
+<code>felm</code> and <code>fixest</code> from base R and the
+<code>lfe</code> and <code>fixest</code> packages.</p>
+<p>To start, we create a random data set with two cluster variables
+(group_id1 &amp; group_id2), two fixed effects and a set of covariates.
+The <code>icc_</code> arguments control the cluster variable’s
+intra-cluster correlation.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed via dqset.seed for boot_algo = &quot;R&quot; &amp; Rademacher, Webb &amp; Normal weights</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dqrng<span class="sc">::</span><span class="fu">dqset.seed</span>(<span class="dv">2352342</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set &#39;familiar&#39; seed for all other algorithms and weight types </span></span>
@@ -168,21 +614,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># model with interaction</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>lm_fit_interact <span class="ot">&lt;-</span> <span class="fu">lm</span>(proposition_vote <span class="sc">~</span> treatment <span class="sc">+</span> ideology1 <span class="sc">+</span> log_income<span class="sc">:</span>Q1_immigration , <span class="at">data =</span> voters)</span></code></pre></div>
-<p>The <code>boottest()</code> function has 4 required and several optional arguments. The required objects are</p>
+<p>The <code>boottest()</code> function has 4 required and several
+optional arguments. The required objects are</p>
 <ul>
-<li>object: a regression object of type <code>lm</code>, <code>fixest</code> or <code>felm</code></li>
-<li>clustid: a character vector that defines the clustering variables</li>
-<li>param: a character vector of length one - the model parameter to be tested</li>
+<li>object: a regression object of type <code>lm</code>,
+<code>fixest</code> or <code>felm</code></li>
+<li>clustid: a character vector that defines the clustering
+variables</li>
+<li>param: a character vector of length one - the model parameter to be
+tested</li>
 <li>B: the number of bootstrap iterations</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># boottest on an object of type lm</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span></code></pre></div>
-<p>To tests for an interaction, it is important to use the coefficient names that are internally created by the modeling function.</p>
+<p>To tests for an interaction, it is important to use the coefficient
+names that are internally created by the modeling function.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#names(coef(lm_fit_interact))</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>boot_lm_interact <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit_interact, <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, <span class="at">param =</span> <span class="st">&quot;log_income:Q1_immigration1&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span></code></pre></div>
-<p><code>boottest()</code> further allows for multivariable tests. Suppose we’re interested in testing the null hypothesis <span class="math inline">\(0.6*treatment + 0.2*ideology1 = 0.02\)</span>. To test such a hypothesis, one would have to specify the hypothesis via the <code>param</code>, <code>R</code> and <code>r</code> arguments:</p>
+<p><code>boottest()</code> further allows for multivariable tests.
+Suppose we’re interested in testing the null hypothesis <span class="math inline">\(0.6*treatment + 0.2*ideology1 = 0.02\)</span>. To
+test such a hypothesis, one would have to specify the hypothesis via the
+<code>param</code>, <code>R</code> and <code>r</code> arguments:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>boot_multi <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;ideology1&quot;</span>), <span class="at">R =</span> <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="fl">0.2</span>), <span class="at">r =</span> <span class="fl">0.02</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span></code></pre></div>
-<p>To access the estimation results, <code>boottest()</code> comes with <code>summary()</code>, <code>tidy()</code> and <code>glance()</code> methods. The <code>tidy()</code> method returns the estimation results in a data.frame. <code>summary()</code> returns additional information on top of the test statistics reported by <code>tidy()</code>. The<code>glance()</code> method enables the use of output formatting tools from the <code>modelsummary</code> package.</p>
+<p>To access the estimation results, <code>boottest()</code> comes with
+<code>summary()</code>, <code>tidy()</code> and <code>glance()</code>
+methods. The <code>tidy()</code> method returns the estimation results
+in a data.frame. <code>summary()</code> returns additional information
+on top of the test statistics reported by <code>tidy()</code>.
+The<code>glance()</code> method enables the use of output formatting
+tools from the <code>modelsummary</code> package.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fwildclusterboot&#39;s internal summary() method</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_lm)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, param = &quot;treatment&quot;, B = 9999, clustid = &quot;group_id1&quot;)</span></span>
@@ -340,13 +800,16 @@ Log.Lik.
 </tr>
 </tbody>
 </table>
-<p>A <code>plot()</code> method allows the user to inspect the bootstrap t-statistics:</p>
+<p>A <code>plot()</code> method allows the user to inspect the bootstrap
+t-statistics:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boot_lm)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 <!-- A note on the output in `tidy()` and `summary()`: -->
 <div id="multiway-clustering" class="section level2">
 <h2>Multiway Clustering</h2>
-<p>The <code>boottest()</code> function supports clustering of any dimension. E.g. for two-way clustering, one simply needs to specify the names of the cluster variables in a character vector.</p>
+<p>The <code>boottest()</code> function supports clustering of any
+dimension. E.g. for two-way clustering, one simply needs to specify the
+names of the cluster variables in a character vector.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_lm)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, param = &quot;treatment&quot;, B = 9999, clustid = c(&quot;group_id1&quot;, </span></span>
@@ -357,14 +820,20 @@ Log.Lik.
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Bootstr. Type: rademacher</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Clustering: 2-way</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Confidence Sets: 95%</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40 20 251</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Number of Clusters: 40 20 253</span></span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              term estimate statistic p.value conf.low conf.high</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.845   0.005     0.03     0.115</span></span></code></pre></div>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1*treatment = 0    0.073     3.842   0.004    0.031     0.115</span></span></code></pre></div>
 </div>
 <div id="the-heteroskedastic-bootstrap" class="section level2">
 <h2>The Heteroskedastic Bootstrap</h2>
-<p>If you drop the <code>clustid</code> argument, <code>boottest()</code> will run a heteroskedasticity robust wild bootstrap via the ‘R-lean’ algorithm. At the moment, the null hypothesis is always imposed, only Rademacher and Webb weights are supported, and no confidence intervals are computed. Further, no regression weights are supported. As all algorithms in <code>fwildclusterboot</code>, p-values are calculated based on pivotal t-statistics.</p>
+<p>If you drop the <code>clustid</code> argument,
+<code>boottest()</code> will run a heteroskedasticity robust wild
+bootstrap via the ‘R-lean’ algorithm. At the moment, the null hypothesis
+is always imposed, only Rademacher and Webb weights are supported, and
+no confidence intervals are computed. Further, no regression weights are
+supported. As all algorithms in <code>fwildclusterboot</code>, p-values
+are calculated based on pivotal t-statistics.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_lm)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; boottest.lm(object = lm_fit, param = &quot;treatment&quot;, B = 9999)</span></span>
@@ -382,7 +851,10 @@ Log.Lik.
 </div>
 <div id="choice-of-bootstrap-weights" class="section level2">
 <h2>Choice of Bootstrap Weights</h2>
-<p>Furthermore, the user can choose among four different weighting distribution via the <code>type</code> argument: Rademacher, Mammen, Normal and Webb. By default, <code>boottest()</code> uses the Rademacher distribution.</p>
+<p>Furthermore, the user can choose among four different weighting
+distribution via the <code>type</code> argument: Rademacher, Mammen,
+Normal and Webb. By default, <code>boottest()</code> uses the Rademacher
+distribution.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>boot_lm_rade <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
@@ -419,20 +891,20 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.003)
+0.073 (0.006)
 </td>
 <td style="text-align:center;">
-0.073 (0.004)
+0.073 (0.006)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.028, 0.117]
+[0.031, 0.115]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.114]
+[0.029, 0.117]
 </td>
 </tr>
 <tr>
@@ -506,7 +978,9 @@ Log.Lik.
 </div>
 <div id="other-function-arguments" class="section level2">
 <h2>Other function arguments</h2>
-<p>Via the function argument <code>sign_level</code>, the user can control the significance level of the test. The default value is sign_level = 0.05, which corresponds to a 95% confindence interval.</p>
+<p>Via the function argument <code>sign_level</code>, the user can
+control the significance level of the test. The default value is
+sign_level = 0.05, which corresponds to a 95% confindence interval.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>boot_lm_5 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>),</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, <span class="at">B =</span> <span class="dv">9999</span>, </span>
@@ -625,7 +1099,11 @@ Log.Lik.
 </tr>
 </tbody>
 </table>
-<p>In the case of multiway clustering, the user might want to specify the bootstrap clustering level. By default, boottest chooses the clustering level with the highest number of clusters as <code>bootcluster = &quot;max&quot;</code>. Other choices are the minimum cluster, or independent clustering variables.</p>
+<p>In the case of multiway clustering, the user might want to specify
+the bootstrap clustering level. By default, boottest chooses the
+clustering level with the highest number of clusters as
+<code>bootcluster = &quot;max&quot;</code>. Other choices are the minimum cluster,
+or independent clustering variables.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>boot_lm1 <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>,</span>
@@ -663,7 +1141,7 @@ Model 2
 1*treatment = 0
 </td>
 <td style="text-align:center;">
-0.073 (0.004)
+0.073 (0.005)
 </td>
 <td style="text-align:center;">
 0.073 (0.008)
@@ -673,10 +1151,10 @@ Model 2
 <td style="text-align:left;box-shadow: 0px 1px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.031, 0.110]
+[0.031, 0.111]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.027, 0.116]
+[0.027, 0.115]
 </td>
 </tr>
 <tr>
@@ -750,7 +1228,13 @@ Log.Lik.
 </div>
 <div id="fixed-effects" class="section level2">
 <h2>Fixed Effects</h2>
-<p>Last, <code>boottest()</code> supports out-projection of fixed effects in the estimation stage via <code>lfe::felm()</code> and <code>fixest::feols()</code>. Within the bootstrap, the user can choose to project out <em>only one</em> fixed effect, which can be set via the <code>fe</code> function argument. All other fixed effects specified in either <code>felm()</code> or <code>feols()</code> are treated as sets of binary regressors.</p>
+<p>Last, <code>boottest()</code> supports out-projection of fixed
+effects in the estimation stage via <code>lfe::felm()</code> and
+<code>fixest::feols()</code>. Within the bootstrap, the user can choose
+to project out <em>only one</em> fixed effect, which can be set via the
+<code>fe</code> function argument. All other fixed effects specified in
+either <code>felm()</code> or <code>feols()</code> are treated as sets
+of binary regressors.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">requireNamespace</span>(<span class="st">&quot;fixest&quot;</span>)){</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimate the regression model via feols</span></span>
@@ -766,7 +1250,10 @@ Log.Lik.
 </div>
 <div id="the-subcluster-bootstrap" class="section level2">
 <h2>The Subcluster Bootstrap</h2>
-<p>In the case of few treated clusters, <a href="https://academic.oup.com/ectj/article-abstract/21/2/114/5078969">MacKinnon and Webb (2018)</a> suggest to use subclusters to form the bootstrap distribution. <code>boottest()</code> allows the user to specify subclusters via the <code>bootcluster</code> argument.</p>
+<p>In the case of few treated clusters, <a href="https://academic.oup.com/ectj/article-abstract/21/2/114/5078969">MacKinnon
+and Webb (2018)</a> suggest to use subclusters to form the bootstrap
+distribution. <code>boottest()</code> allows the user to specify
+subclusters via the <code>bootcluster</code> argument.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>boot_min <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit,</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">clustid =</span> <span class="fu">c</span>(<span class="st">&quot;group_id1&quot;</span>, <span class="st">&quot;group_id2&quot;</span>), </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
@@ -811,7 +1298,7 @@ Model 2
 0.073 (0.003)
 </td>
 <td style="text-align:center;">
-0.073 (0.008)
+0.073 (0.010)
 </td>
 </tr>
 <tr>
@@ -821,7 +1308,7 @@ Model 2
 [0.032, 0.110]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-[0.029, 0.118]
+[0.027, 0.119]
 </td>
 </tr>
 <tr>
@@ -895,7 +1382,10 @@ Log.Lik.
 </div>
 <div id="regression-weights-weighted-least-squares-wls" class="section level2">
 <h2>Regression Weights / Weighted Least Squares (WLS)</h2>
-<p>If regression weights are specified in the estimation stage via <code>lm()</code>, <code>feols()</code> or <code>felm()</code>, <code>boottest()</code> incorporates the weights into the bootstrap inference:</p>
+<p>If regression weights are specified in the estimation stage via
+<code>lm()</code>, <code>feols()</code> or <code>felm()</code>,
+<code>boottest()</code> incorporates the weights into the bootstrap
+inference:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression with weights / WLS</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>lm_w_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(proposition_vote <span class="sc">~</span> treatment <span class="sc">+</span> ideology1 <span class="sc">+</span> log_income, <span class="at">weights =</span> voters<span class="sc">$</span>weights, <span class="at">data =</span> voters)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -906,8 +1396,17 @@ Log.Lik.
 </div>
 <div id="parallel-execution" class="section level2">
 <h2>Parallel Execution</h2>
-<p>A major bottleneck for the performance of <code>boottest()</code> is a large matrix multiplication, which includes the bootstrap weights matrix on the right. In order to speed up the computation, this multiplication calls the c++ Eigen library, which allows for parallelization of dense matrix products. By default, <code>boottest()</code> uses one thread. Note that there is a cost of parallelization due to communication overhead. As a rule of thumb, if <code>boottest()</code> takes more than 10 seconds per execution, using a second thread might speed up the bootstrap.</p>
-<p>The number of threads can be specified via the <code>nthreads</code> argument of <code>boottest()</code>:</p>
+<p>A major bottleneck for the performance of <code>boottest()</code> is
+a large matrix multiplication, which includes the bootstrap weights
+matrix on the right. In order to speed up the computation, this
+multiplication calls the c++ Eigen library, which allows for
+parallelization of dense matrix products. By default,
+<code>boottest()</code> uses one thread. Note that there is a cost of
+parallelization due to communication overhead. As a rule of thumb, if
+<code>boottest()</code> takes more than 10 seconds per execution, using
+a second thread might speed up the bootstrap.</p>
+<p>The number of threads can be specified via the <code>nthreads</code>
+argument of <code>boottest()</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
@@ -917,9 +1416,15 @@ Log.Lik.
 </div>
 <div id="running-the-wild-cluster-bootstrap-via-wildboottests.jl" class="section level1">
 <h1>Running the wild cluster bootstrap via WildBootTests.jl</h1>
-<p><code>fwildclusterboot</code> serves as an R port to <a href="https://github.com/droodman/WildBootTests.jl">WildBootTests.jl</a> package.</p>
-<p>For guidance on how to install <code>Julia</code> and <code>WildBootTests.jl</code> and how to connect R and Julia, please take a look at the <a href="https://s3alfisc.github.io/fwildclusterboot/articles/WildBootTests.html">running WildBootTests.jl through fwildclusterboot</a> vignette.</p>
-<p>You can tell <code>boottest()</code> to run <code>WildBootTests.jl</code> by using the <code>boot_algo</code> function argument:</p>
+<p><code>fwildclusterboot</code> serves as an R port to the <a href="https://github.com/droodman/WildBootTests.jl">WildBootTests.jl</a>
+package.</p>
+<p>For guidance on how to install <code>Julia</code> and
+<code>WildBootTests.jl</code> and how to connect R and Julia, please
+take a look at the <a href="https://s3alfisc.github.io/fwildclusterboot/articles/WildBootTests.html">running
+WildBootTests.jl through fwildclusterboot</a> vignette.</p>
+<p>You can tell <code>boottest()</code> to run
+<code>WildBootTests.jl</code> by using the <code>boot_algo</code>
+function argument:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>boot_lm <span class="ot">&lt;-</span> <span class="fu">boottest</span>(lm_fit, </span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>, </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>, </span>
@@ -928,13 +1433,21 @@ Log.Lik.
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>generics<span class="sc">::</span><span class="fu">tidy</span>(boot_lm)</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#             term   estimate statistic    p.value   conf.low conf.high</span></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#1 1*treatment = 0 0.07290769  3.709435 0.00060006 0.03326969 0.1134117</span></span></code></pre></div>
-<p>The seed used within Julia is linked to R’s global seed, which you can set through the familiar <code>set.seed()</code> function.</p>
-<p>If you decide to run all your bootstraps through <code>WildBootTests.jl</code>, you can set a global variable via</p>
+<p>The seed used within Julia is linked to R’s global seed, which you
+can set through the familiar <code>set.seed()</code> function.</p>
+<p>If you decide to run all your bootstraps through
+<code>WildBootTests.jl</code>, you can set a global variable via</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setBoottest_boot_algo</span>(<span class="st">&quot;WildBootTests.jl&quot;</span>)</span></code></pre></div>
-<p>Calling <code>boottest()</code> without specifying <code>boot_algo = &quot;WildBootTests.jl&quot;</code> will now automatically run the bootstrap through <code>WildBootTests.jl</code>.</p>
+<p>Calling <code>boottest()</code> without specifying
+<code>boot_algo = &quot;WildBootTests.jl&quot;</code> will now automatically run
+the bootstrap through <code>WildBootTests.jl</code>.</p>
 <div id="the-wre-bootstrap-for-iv-models" class="section level2">
 <h2>The WRE bootstrap for IV models</h2>
-<p>Through <code>WildBootTests.jl</code>, <code>fwildclusterboot</code> supports the WRE bootstrap by <a href="https://www.tandfonline.com/doi/abs/10.1198/jbes.2009.07221">Davidson &amp; MacKinnon, 2010</a> for IV (instrumental variables) models for objects of type <code>ivreg</code> via the <code>boottest()</code> function:</p>
+<p>Through <code>WildBootTests.jl</code>, <code>fwildclusterboot</code>
+supports the WRE bootstrap by <a href="https://www.tandfonline.com/doi/abs/10.1198/jbes.2009.07221">Davidson
+&amp; MacKinnon, 2010</a> for IV (instrumental variables) models for
+objects of type <code>ivreg</code> via the <code>boottest()</code>
+function:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ivreg)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;SchoolingReturns&quot;</span>, <span class="at">package =</span> <span class="st">&quot;ivreg&quot;</span>)</span>
@@ -957,8 +1470,13 @@ Log.Lik.
 </div>
 <div id="tests-of-multiple-joint-hypotheses-q-1" class="section level2">
 <h2>Tests of multiple joint hypotheses (q &gt; 1)</h2>
-<p>Through <code>WildBootTests.jl</code>, you can also test multiple joint hypotheses via the <code>mboottest()</code> function. With minor differences, <code>mboottest()&#39;s</code> syntax largely mirrors <code>boottest()</code>.</p>
-<p>To jointly test the null hypothesis <span class="math inline">\(H_0: treatment = 0 \text{ and } ideology1 = 0\)</span> vs <span class="math inline">\(H_0: treatment \neq 0 \text{ and } ideology1 \neq 0\)</span> via a wild cluster bootstrap, you can run</p>
+<p>Through <code>WildBootTests.jl</code>, you can also test multiple
+joint hypotheses via the <code>mboottest()</code> function. With minor
+differences, <code>mboottest()&#39;s</code> syntax largely mirrors
+<code>boottest()</code>.</p>
+<p>To jointly test the null hypothesis <span class="math inline">\(H_0:
+treatment = 0 \text{ and } ideology1 = 0\)</span> vs <span class="math inline">\(H_0: treatment \neq 0 \text{ and } ideology1 \neq
+0\)</span> via a wild cluster bootstrap, you can run</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clubSandwich)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> clubSandwich<span class="sc">::</span><span class="fu">constrain_zero</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">coef</span>(lm_fit))</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>wboottest <span class="ot">&lt;-</span> </span>
@@ -1056,8 +1574,19 @@ Log.Lik.
 <!-- For the WCU, both numerator and denominator do not depend on $r$. -->
 <!-- + why might confidence intervals differ for estimates based on `lm()`, `feols()` and `felm()`? -->
 <div id="a-sanity-check-if-fwildclusterbootboottest-works-as-intended" class="section level2">
-<h2>A sanity check if <code>fwildclusterboot::boottest()</code> works as intended</h2>
-<p>A sanity check to see if <code>fwildclusterboot::boottest()</code> works as intended is to look at its <code>t_stat</code> return value. For both the WCR and WCU bootstrap, <code>boottest()</code> re-calculates the “original” - hence non-bootstrapped - t-statistic from its input regression model. The t-stat computed in <code>boottest()</code> and the t-stats reported by either <code>lm()</code>, <code>feols()</code> and <code>lfe()</code> under the same error clustering structure and small-sample adjustments should be <em>identical</em>. If you find that they differ, please report a bug <a href="https://github.com/s3alfisc/fwildclusterboot/issues">on github</a>. Note that <code>fwildclusterboot</code> explicitly tests for t-stat equality against <code>fixest::feols()</code> <a href="https://github.com/s3alfisc/fwildclusterboot/blob/master/tests/testthat/test-tstat_equivalence.R">here</a>.</p>
+<h2>A sanity check if <code>fwildclusterboot::boottest()</code> works as
+intended</h2>
+<p>A sanity check to see if <code>fwildclusterboot::boottest()</code>
+works as intended is to look at its <code>t_stat</code> return value.
+For both the WCR and WCU bootstrap, <code>boottest()</code>
+re-calculates the “original” - hence non-bootstrapped - t-statistic from
+its input regression model. The t-stat computed in
+<code>boottest()</code> and the t-stats reported by either
+<code>lm()</code>, <code>feols()</code> and <code>lfe()</code> under the
+same error clustering structure and small-sample adjustments should be
+<em>identical</em>. If you find that they differ, please report a bug <a href="https://github.com/s3alfisc/fwildclusterboot/issues">on
+github</a>. Note that <code>fwildclusterboot</code> explicitly tests for
+t-stat equality against <code>fixest::feols()</code> <a href="https://github.com/s3alfisc/fwildclusterboot/blob/master/tests/testthat/test-tstat_equivalence.R">here</a>.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> </span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fwildclusterboot<span class="sc">:::</span><span class="fu">create_data</span>(<span class="at">N =</span> <span class="dv">1000</span>, </span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">N_G1 =</span> <span class="dv">20</span>, </span>
@@ -1101,11 +1630,26 @@ Log.Lik.
 </div>
 <div id="small-sample-corrections" class="section level2">
 <h2>Small Sample Corrections</h2>
-<p><code>boottest()</code> offers several options for small sample adjustments via the <code>ssc</code> function argument which need to be specified via the <code>boot_ssc()</code> function. <code>boot_ssc()</code> has 4 arguments and is intentionally designed to mimic <code>fixest&#39;s</code> <code>ssc()</code> function. For more information on the default choices and alternative options, see <code>?fwildclusterboot::boot_ssc()</code>.</p>
+<p><code>boottest()</code> offers several options for small sample
+adjustments via the <code>ssc</code> function argument which need to be
+specified via the <code>boot_ssc()</code> function.
+<code>boot_ssc()</code> has 4 arguments and is intentionally designed to
+mimic <code>fixest&#39;s</code> <code>ssc()</code> function. For more
+information on the default choices and alternative options, see
+<code>?fwildclusterboot::boot_ssc()</code>.</p>
 </div>
 <div id="memory-the-lean-implementation-of-the-wild-cluster-bootstrap" class="section level2">
-<h2>Memory &amp; the ‘lean’ implementation of the wild cluster bootstrap</h2>
-<p>Because the R-implementation of the fast algorithm is memory-intensive, <code>fwildclusterboot</code> further supports a Rcpp-based ‘lean’ implementation of the wild cluster bootstrap in case that memory demands get prohibitively large. In general, the ‘lean’ algorithm is much slower: its main feature is that it requires <em>much</em> less memory. The algorithm is equivalent to the ‘wild2’ algorithm in the “Fast &amp; Wild” paper by Roodman et al. Note that the implementation in <code>WildBootTests.jl</code> is, in general, very memory-efficient.</p>
+<h2>Memory &amp; the ‘lean’ implementation of the wild cluster
+bootstrap</h2>
+<p>Because the R-implementation of the fast algorithm is
+memory-intensive, <code>fwildclusterboot</code> further supports a
+Rcpp-based ‘lean’ implementation of the wild cluster bootstrap in case
+that memory demands get prohibitively large. In general, the ‘lean’
+algorithm is much slower: its main feature is that it requires
+<em>much</em> less memory. The algorithm is equivalent to the ‘wild2’
+algorithm in the “Fast &amp; Wild” paper by Roodman et al. Note that the
+implementation in <code>WildBootTests.jl</code> is, in general, very
+memory-efficient.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bench)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> fwildclusterboot<span class="sc">:::</span><span class="fu">create_data</span>(</span>
@@ -1149,22 +1693,20 @@ Log.Lik.
 </div>
 <div id="seeds" class="section level2">
 <h2>Seeds</h2>
-<p>For Rademacher, Normal and Webb weights and <code>boot_algo = &quot;R&quot;</code>, you need to set a global seed via <code>dqrng::dqset.seed()</code>. For all other options - Mammen weights with <code>boot_algo = &quot;R&quot;</code>, <code>boot_algo = &quot;R-lean&quot;</code> or <code>boot_algo = &quot;WildBootTests.jl&quot;</code>, you can set a global seed via the familiar<code>set.seed()</code>.</p>
+<p>For Rademacher, Normal and Webb weights and
+<code>boot_algo = &quot;R&quot;</code>, you need to set a global seed via
+<code>dqrng::dqset.seed()</code>. For all other options - Mammen weights
+with <code>boot_algo = &quot;R&quot;</code>, <code>boot_algo = &quot;R-lean&quot;</code> or
+<code>boot_algo = &quot;WildBootTests.jl&quot;</code>, you can set a global seed
+via the familiar<code>set.seed()</code>.</p>
 </div>
 <div id="treatment-of-invalid-test-statistics-for-multiway-clustering" class="section level2">
 <h2>Treatment of Invalid Test Statistics for multiway clustering</h2>
-<p>In case of multi-way clustering, it is not guaranteed that the covariance matrix is positive definite, in which case the resulting bootstrap test statistics are invalid. <code>boottest()</code> follows the implementation in STATA and deletes invalid tests statistics, and informs the user with a note.</p>
-</div>
-<div id="on-the-handling-of-missing-values" class="section level2">
-<h2>On the handling of missing values</h2>
-<p><code>boottest()</code> retrieves both the design matrix <span class="math inline">\(X\)</span>, the dependent variable <span class="math inline">\(y\)</span> and the cluster variables from the input object of type <code>lm</code>, <code>fixest</code> or <code>felm</code>. Because <code>boottest()</code> allows to add or delete clustering variables that are not employed in <code>lm()</code>, <code>feols()</code> and <code>felm()</code>, it may occur that a cluster variable is added in <code>boottest()</code> that is not included in the regression model, either as a cluster variable or covariate.</p>
-<p>In this case, boottest by default deletes the respective rows in the dependent variable, design matrix and in the cluster variables. In consequence, estimation (in the modeling step) and inference (via <code>boottest()</code>) are done on a different sample. <code>boottest()</code> returns a warning.</p>
-<p>This in turn has a consequence for the use of <code>boottest()</code> and <code>modelsummary</code>. <code>boottest()</code> simply calls the <code>glance()</code> methods for objects of types <code>fixest</code>, <code>felm</code> and <code>lm</code> from the <code>broom</code> package, and therefore, the number of observations reported via <code>msummary()</code> is the number of observations used in the modeling stage.</p>
-<p>The default behavior of <code>boottest()</code> - to delete missings with a warning - can be set off via the <code>na_omit</code> function argument. If <code>na_omit</code> is set to FALSE, <code>boottest()</code> will not allow for missing values in the added cluster variables and throw an error.</p>
-</div>
-<div id="a-note-of-caution" class="section level2">
-<h2>A note of caution</h2>
-<p>The <code>feols()</code> function from <code>fixest</code> introduces several useful formula shortcuts. E.g. one can fit several regressions at once. All these advanced formula tools are not supported in <code>boottest()</code>. <code>boottest()</code> tries to catch any use of advanced formulas, but might fail to return errors in some cases.</p>
+<p>In case of multi-way clustering, it is not guaranteed that the
+covariance matrix is positive definite, in which case the resulting
+bootstrap test statistics are invalid. <code>boottest()</code> follows
+the implementation in STATA and deletes invalid tests statistics, and
+informs the user with a note.</p>
 </div>
 </div>
 

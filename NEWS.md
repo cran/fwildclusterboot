@@ -1,5 +1,65 @@
-# fwildclusterboot 0.8
+# fwildclusterboot 0.9
 
++ v0.9 moves data pre-processing from `model.frame` methods to `model_matrix` methods. I had wanted to do so for a while, but issue #42, as raised by Michael Topper, has finally convinced me to start working on this project. 
+
++ Moving to `model_matrix` methods unlocks new functionality for how `boottest()` plays with `fixest` objects - it is now possible to run `boottest()` after `feols()` models that use syntactic sugar:
+
+```
+library(fwildclusterboot)
+library(fixest)
+
+data(voters)
+feols_fit <- feols(proposition_vote ~ i(treatment, ideology1) ,
+    data = voters
+)
+boot1 <- boottest(feols_fit,
+    B = 9999,
+    param = "treatment::0:ideology1",
+    clustid = "group_id1"
+)
+
+feols_fits <- fixest::feols(proposition_vote ~ treatment | sw(Q1_immigration, Q2_defense), data = voters)
+res <- lapply(feols_fits, \(x) boottest(x, B = 999, param = "treatment", clustid = "group_id1"))  
+
+voters$split <- sample(1:2, nrow(voters), TRUE)
+feols_fits <- fixest::feols(proposition_vote ~ treatment, split = ~split, data = voters)
+
+res <- lapply(feols_fits, \(x) boottest(x, B = 999, param = "treatment", clustid = "group_id1"))  
+```
+
+Some formula sugar still leads to errors, e.g. 
+
+```
+feols_fit2 <- feols(proposition_vote ~ treatment | Q1_immigration^Q2_defense,
+    data = voters
+)
+
+boot1 <- boottest(feols_fit2,
+    B = 9999,
+    param = "treatment",
+    clustid = "group_id1"
+)
+```
+
++ The release further fixes a multicollinearity bug that occured when `lm()` or `fixest()` silently deleted multicollinar variable(s). Thanks to Kurt Schmidheiny for reporting!
+
++ The `na_omit` function argument has been dropped. If the cluster variable is not included in the regression model, it is now not allowed to contain NA values. 
+
++ Several function arguments can now be fed to `boottest()` as formulas (`param`, `clustid`, `bootcluster`, `fe`).
+
+```
+data(voters)
+feols_fit <- feols(proposition_vote ~ treatment ,
+    data = voters
+)
+boot <- boottest(feols_fit,
+    B = 9999,
+    param = ~ treatment,
+    clustid = ~ group_id1
+)
+```
+
+# fwildclusterboot 0.8
 
 ### Two new bootstrap algorithms: 'WildBootTests.jl' and 'R-lean'
 

@@ -1,7 +1,7 @@
 Package: fwildclusterboot
 Title: Fast Wild Cluster Bootstrap Inference for Linear Models
-Version: 0.8
-Date: 2022-04-18
+Version: 0.9
+Date: 2022-06-06
 Authors@R: 
     c(
     person(given = "Alexander",
@@ -56,17 +56,17 @@ Imports: collapse, Formula, Rcpp, dreamerr, Matrix, Matrix.utils,
         generics, gtools, dqrng, JuliaConnectoR
 Suggests: fixest, lfe, ivreg, clubSandwich, sandwich, lmtest,
         data.table, fabricatr, covr, knitr, rmarkdown, broom,
-        modelsummary, bench, testthat (>= 3.0.0)
+        modelsummary, bench, testthat (>= 3.0.0), tibble
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 LinkingTo: Rcpp,RcppArmadillo, RcppEigen
 VignetteBuilder: knitr
 Language: en-US
 SystemRequirements: Julia (>= 1.7), WildBootTests.jl (>=0.7.13)
 Config/testthat/edition: 3
 NeedsCompilation: yes
-Packaged: 2022-04-18 15:01:31 UTC; alexa
+Packaged: 2022-06-10 20:59:13 UTC; alexa
 Author: Alexander Fischer [aut, cre],
   David Roodman [aut],
   Achim Zeileis [ctb] (Author of included sandwich fragments),
@@ -76,4 +76,4 @@ Author: Alexander Fischer [aut, cre],
   Sebastian Krantz [ctb]
 Maintainer: Alexander Fischer <alexander-fischer1801@t-online.de>
 Repository: CRAN
-Date/Publication: 2022-04-19 00:04:29 UTC
+Date/Publication: 2022-06-10 21:20:16 UTC

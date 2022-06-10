@@ -6,13 +6,13 @@
 #' the fast wild bootstrap algorithm developed in Roodman et al., 2019.
 #'
 #' @param object An object of class lm
-#' @param clustid A character vector containing the names of the cluster variables. If NULL, 
+#' @param clustid A character vector or rhs formula containing the names of the cluster variables. If NULL, 
 #'        a heteroskedasticity-robust (HC1) wild bootstrap is run. 
-#' @param param A character vector. The name of the regression
+#' @param param A character vector or rhs formula. The name of the regression
 #'        coefficient(s) for which the hypothesis is to be tested
 #' @param B Integer. The number of bootstrap iterations. When the number of clusters is low,
 #'        increasing B adds little additional runtime.
-#' @param bootcluster A character vector. Specifies the bootstrap clustering variable or variables. If more
+#' @param bootcluster A character vector or rhs formula of length 1. Specifies the bootstrap clustering variable or variables. If more
 #'        than one variable is specified, then bootstrapping is clustered by the intersections of
 #'        clustering implied by the listed variables. To mimic the behavior of stata's boottest command,
 #'        the default is to cluster by the intersection of all the variables specified via the `clustid` argument,
@@ -52,10 +52,6 @@
 #'        1e-6 by default.
 #' @param maxiter Integer. Maximum number of iterations used in the root finding procedure to find the confidence interval.
 #'        10 by default.
-#' @param na_omit Logical. If TRUE, `boottest()` omits rows with missing
-#'        variables in the cluster variable that have not previously been deleted
-#'        when fitting the regression object (e.g. if the cluster variable was not used
-#'        when fitting the regression model).
 #' @param nthreads The number of threads. Can be: a) an integer lower than,
 #'                 or equal to, the maximum number of threads; b) 0: meaning
 #'                 all available threads will be used; c) a number strictly
@@ -72,7 +68,7 @@
 #' @import JuliaConnectoR
 #' @importFrom dreamerr check_arg validate_dots
 #' @importFrom parallel detectCores
-#' @importFrom stats weights
+#' @importFrom stats weights terms expand.model.frame model.frame na.omit nobs formula na.pass reformulate
 #'
 #' @method boottest lm
 #'
@@ -109,8 +105,9 @@
 #' To guarantee reproducibility, you can either use `boottest()'s` `seed` function argument, or 
 #' set a global random seed via 
 #' + `set.seed()` when using
-#'    1) the lean algorithm (via `boot_algo = "R-lean"`), 2) the heteroskedastic wild bootstrap 
-#'    3) the wild cluster bootstrap via `boot_algo = "R"` with Mammen weights or 4) `boot_algo = "WildBootTests.jl"`
+#'    1) the lean algorithm (via `boot_algo = "R-lean"`) including the heteroskedastic wild bootstrap 
+#'    2) the wild cluster bootstrap via `boot_algo = "R"` with Mammen weights or 
+#'    3) `boot_algo = "WildBootTests.jl"`
 #' + `dqrng::dqset.seed()` when using `boot_algo = "R"` for Rademacher, Webb or Normal weights
 #' 
 #' @section Confidence Intervals:
@@ -189,7 +186,6 @@ boottest.lm <- function(object,
                         p_val_type = "two-tailed",
                         tol = 1e-6,
                         maxiter = 10,
-                        na_omit = TRUE,
                         nthreads = getBoottest_nthreads(),
                         ssc = boot_ssc(
                           adj = TRUE,
@@ -208,8 +204,8 @@ boottest.lm <- function(object,
   dreamerr::validate_dots(stop = TRUE)
 
   check_arg(object, "MBT class(lm)")
-  check_arg(clustid, "NULL | character scalar | character vector")
-  check_arg(param, "MBT scalar character | character vector")
+  check_arg(clustid, "NULL | character scalar | character vector | formula")
+  check_arg(param, "MBT scalar character | character vector | formula")
   check_arg(B, "MBT scalar integer")
   check_arg(sign_level, "scalar numeric GT{0} LT{1}")
   check_arg(type, "charin(rademacher, mammen, norm, gamma, webb)")
@@ -218,7 +214,7 @@ boottest.lm <- function(object,
   check_arg(seed, "scalar integer | NULL")
   check_arg(R, "NULL| scalar numeric | numeric vector")
   check_arg(r, "numeric scalar | NULL")
-  check_arg(bootcluster, "character vector")
+  check_arg(bootcluster, "character vector | formula")
   check_arg(tol, "numeric scalar GT{0}")
   check_arg(maxiter, "scalar integer GT{5}")
   check_arg(boot_ssc, "class(ssc) | class(boot_ssc)")
@@ -230,7 +226,20 @@ boottest.lm <- function(object,
   if(!is.null(beta0)){
     stop("The function argument 'beta0' is deprecated. Please use the function argument 'r' instead, by which it is replaced.")
   }
+  
+  if(inherits(clustid, "formula")){
+    clustid <- attr(terms(clustid), "term.labels")
+  }
+  
+  if(inherits(bootcluster, "formula")){
+    bootcluster <- attr(terms(bootcluster), "term.labels")
+  }
+  
+  if(inherits(param, "formula")){
+    param <- attr(terms(param), "term.labels")
+  }
 
+  
   internal_seed <- set_seed(
     seed = seed, 
     boot_algo = boot_algo, 
@@ -279,14 +288,12 @@ boottest.lm <- function(object,
   # now split into R, R-lean and WildBootTests.jl algos
   # different pre-processing and different algo-functions
 
-  preprocess <- preprocess(
-    object = object,
-    cluster = clustid,
-    fe = NULL,
-    param = param,
-    bootcluster = bootcluster,
-    na_omit = na_omit,
-    R = R,
+  preprocess <- preprocess2.lm(
+    object = object, 
+    clustid = clustid, 
+    R = R, 
+    param = param, 
+    bootcluster = bootcluster, 
     boot_algo = boot_algo
   )
 
@@ -303,7 +310,7 @@ boottest.lm <- function(object,
 
   # collect data from preprocess
   N <- preprocess$N
-  k <- length(coef(object))
+  k <- preprocess$k
   G <- vapply(preprocess$clustid, function(x) length(unique(x)), numeric(1))
   vcov_sign <- preprocess$vcov_sign
   small_sample_correction <- get_ssc(boot_ssc_object = ssc, N = N, k = k, G = G, vcov_sign = vcov_sign, heteroskedastic = heteroskedastic)
