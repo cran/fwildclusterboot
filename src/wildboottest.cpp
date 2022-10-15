@@ -2,49 +2,29 @@
 #define NDEBUG 
 #include <RcppEigen.h>
 #ifdef _OPENMP
-  #include <omp.h>
-// [[Rcpp::plugins(openmp)]]
+#include <omp.h>
 #else
-  #define omp_get_max_threads() 0
-  #define EIGEN_DONT_PARALLELIZE
+#define omp_get_max_threads() 0
+#define EIGEN_DONT_PARALLELIZE
 #endif
 
+// [[Rcpp::plugins(openmp)]]
 // [[Rcpp::depends(RcppArmadillo, RcppEigen)]]
 
 using namespace Rcpp;
 
-
-//' Matrix Multiplication via Eigen
-//' @param A A matrix.
-//' @param B A matrix.
-//' @param nthreads Integer. Number of threads to use for matrix multiplication.
-//' @return A matrix
-// [[Rcpp::export]]
-SEXP eigenMapMatMult(const Eigen::Map<Eigen::MatrixXd> A,
-                     Eigen::Map<Eigen::MatrixXd> B,
-                     int nthreads){
-  
-  Eigen::setNbThreads(nthreads);
-  //omp_set_num_threads(nthreads);
-  Eigen::MatrixXd C = A * B;
-  return Rcpp::wrap(C);
-}
-
-//' Get maximum number of threads on hardware for open mp support
-// [[Rcpp::export]]
-int cpp_get_nb_threads(){
-  return omp_get_max_threads();
-}
-
-
+//'create bootstrap sample weights
+//' @param G the number of clusters
+//' @param type 0 for rademacher, 1 for webb
+//' @noRd
 // [[Rcpp::export]]
 arma::mat sample_weights(int G,
                          int type){
-
+  
   // type == 0 for rademacher
-  // type == 1 for mammen
+  // type == 1 for webb
   arma::vec weights(G);
-
+  
   if(type == 0){
     for(int g = 0; g < G; g++){
       double v = arma::randu();
@@ -72,54 +52,11 @@ arma::mat sample_weights(int G,
       }
     }
   }
-
-
+  
+  
   return weights;
-
+  
 }
-
-
-// // [[Rcpp::export]]
-// arma::mat sample_weights2(int G,
-//                          int type){
-//   
-//   // R random function based random numbers
-//   // type == 0 for rademacher
-//   // type == 1 for mammen
-//   arma::vec weights(G);
-//   
-//   if(type == 0){
-//     for(int g = 0; g < G; g++){
-//       double v = R::runif(0, 1);
-//       if(v < 0.5){
-//         weights(g) = -1;
-//       } else {
-//         weights(g) = 1;
-//       }
-//     }
-//   } else if(type == 1){
-//     for(int g = 0; g < G; g++){
-//       double v = R::runif(0, 1);
-//       if(v < 1/6){
-//         weights(g) = -sqrt(1.5);
-//       } else if (v < 1/3){
-//         weights(g) = -1;
-//       } else if (v < 1/2){
-//         weights(g) = -sqrt(0.5);
-//       }  else if (v < 2/3){
-//         weights(g) = sqrt(0.5);
-//       } else if (v < 5/6){
-//         weights(g) = 1;
-//       } else if (v >= 5/6){
-//         weights(g) = sqrt(1.5);
-//       }
-//     }
-//   }
-//   
-//   
-//   return weights;
-//   
-// }
 
 
 //' Implementation of the heteroskedastic wild bootstrap. Computes
@@ -130,11 +67,18 @@ arma::mat sample_weights(int G,
 //' @param R A matrix - the constraints matrix for a hypothesis test R'beta = r.
 //' @param r A vector - r in hypothesis test R'beta = r.
 //' @param B An integer - controls the number of bootstrap iterations.
-//' @param N_G_bootcluster - The number of bootstrap clusters. For heteroskesdatic wild bootstrap, N_G_bootcluster = N, where N is the number of observations.
+//' @param N_G_bootcluster - The number of bootstrap clusters. For 
+//' heteroskesdatic wild bootstrap, N_G_bootcluster = N, where N 
+//' is the number of observations.
 //' @param cores Integer: the number of cores to be used.
-//' @param type : Integer. Should rademacher or webb weights be used? For rademacher weights, set 'type = 0'. For webb weights, set 'type = 1'.
-//' @param small_sample_correction: double. Small sample correction to be applied.
-//' @return A matrix of bootstrapped t-statistics, where the null is imposed on the bootstrap dgp.
+//' @param type : Integer. Should rademacher or webb weights be used? 
+//' For rademacher weights, set 'type = 0'. For webb weights, set 'type = 1'.
+//' @param small_sample_correction: double. Small sample correction to be 
+//' applied.
+//' @return A matrix of bootstrapped t-statistics, where the null is imposed 
+//' on the bootstrap dgp.
+//' @noRd
+
 
 // [[Rcpp::export]]
 List wildboottestHC(const arma::vec & y,
@@ -145,66 +89,96 @@ List wildboottestHC(const arma::vec & y,
                     const int & N_G_bootcluster,
                     const int & cores,
                     const int & type, 
-                    const double & small_sample_correction) {
-
+                    const double & small_sample_correction, 
+                    const int bootstrap_type) {
+  
   // function implements wild cluster bootstrap,
   // imposing the null
   
-
-  //int n = X.n_rows;
-  int k = X.n_cols;
+  
+  int N = X.n_rows;
 
   // impose null on the bootstrap dgp
   arma::mat XXinv = (X.t() * X ).i();
   arma::mat beta = XXinv * (X.t() * y);
-
+  
+  arma::mat XXinvX = XXinv * X.t();
+  arma::mat RXXinvX = (R.t() * XXinv) * X.t(); //1 x N
+  arma::mat RXXinvX_squared = (arma::pow(RXXinvX, 2));
+    
   // calculate beta constrained
-  arma::vec beta_r = beta - XXinv * R * (R.t() * XXinv * R).i() * (R.t() * beta - r);
+  arma::vec beta_r = beta - XXinv * R * (R.t() * XXinv * R).i() *
+    (R.t() * beta - r);
   arma::vec yhat_r = X * beta_r;
   arma::vec resid_r = y - yhat_r;
-
-  NumericVector s(2);
-  NumericVector prob = NumericVector::create();
-  s[0] = 1;
-  s[1] = -1;
-
-  arma::mat t_boot(k, B + 1);
-
+  
+  // NumericVector s(2);
+  // NumericVector prob = NumericVector::create();
+  // s[0] = 1;
+  // s[1] = -1;
+  
+  // compute 1/(1-h_ii)'s -> resid_multiplier
+  arma::vec resid_multiplier(N);
+  // resid_multiplier.ones();
+  
+  if(bootstrap_type == 1){
+    
+    resid_multiplier.ones();
+    
+  } else {
+    
+    arma::mat hatmat = X * XXinv * X.t(); 
+    arma::vec diag_hatmat(N);
+    
+    for(int i = 0; i < N; i++){
+      diag_hatmat(i) = hatmat(i,i);
+    }
+    
+    if(bootstrap_type == 2){
+      resid_multiplier = 1 / arma::sqrt(1-diag_hatmat);    
+    } else if(bootstrap_type == 3){
+      resid_multiplier = 1 / (1-diag_hatmat);    
+    }
+    
+  }
+  
+  arma::vec t_boot(B + 1);
+  
 #pragma omp parallel for num_threads(cores)
-for(int b = 1; b < B + 1; b++){
-
+  for(int b = 1; b < B + 1; b++){
+    
     // create bootstrap sample
     //arma::vec weights = RcppArmadillo::sample(s, N_G_bootcluster, true, prob);
     arma::vec weights = sample_weights(N_G_bootcluster, type);
-    arma::vec y_boot = yhat_r + resid_r % weights;
+    arma::vec y_boot = yhat_r + resid_multiplier % resid_r % weights;
     // get bootstrapped coefs and resids
-    arma::vec coef_boot = XXinv * (X.t() * y_boot) ;
+    arma::vec coef_boot = XXinvX * y_boot ; // k x 1 
     arma::vec resid_boot = y_boot - X * coef_boot;
-    // because resid_boot is diagonal
-    arma::mat meat = X.t() * arma::diagmat(pow(resid_boot,2)) * X;
-    arma::mat sigma_boot =   (XXinv * meat * XXinv);
-
+    arma::mat boot_var = RXXinvX_squared * pow(resid_boot, 2);
+    
     // calculate t-stats
-    t_boot.col(b) = coef_boot / arma::sqrt(small_sample_correction * arma::diagvec(sigma_boot));
+    t_boot(b) = arma::as_scalar((R.t() * coef_boot - r) / 
+      // arma::sqrt(small_sample_correction * (R.t() * sigma_boot * R)));
+      arma::sqrt(small_sample_correction * boot_var));
   }
-
-  // for b = 0
+  
+  // for b = 0 - always HC1
   arma::vec y_boot = yhat_r + resid_r;
   // get bootstrapped coefs and resids
-  arma::vec coef_boot = XXinv * (X.t() * y_boot) ;
+  arma::vec coef_boot = XXinvX * y_boot ; // k x 1 
   arma::vec resid_boot = y_boot - X * coef_boot;
-  // because resid_boot is diagonal
-  arma::mat meat = X.t() * arma::diagmat(pow(resid_boot,2)) * X;
-  arma::mat sigma_boot =   (XXinv * meat * XXinv);
-
+  arma::mat boot_var = RXXinvX_squared * pow(resid_boot, 2);
+  
   // calculate t-stats
-  t_boot.col(0) = coef_boot / arma::sqrt(small_sample_correction * arma::diagvec(sigma_boot));
-
+  t_boot(0) = arma::as_scalar((R.t() * coef_boot - r) / 
+    // arma::sqrt(small_sample_correction * (R.t() * sigma_boot * R)));
+    arma::sqrt(small_sample_correction * boot_var));
+  
   List res;
   res["t_boot"] = t_boot;
-
+  
   return res;
-
+  
 }
 
 
@@ -218,9 +192,13 @@ for(int b = 1; b < B + 1; b++){
 //' @param B An integer - controls the number of bootstrap iterations.
 //' @param N_G_bootcluster - The number of bootstrap clusters.
 //' @param cores Integer: the number of cores to be used.
-//' @param type : Integer. Should rademacher or webb weights be used? For rademacher weights, set 'type = 0'. For webb weights, set 'type = 1'.
+//' @param type : Integer. Should rademacher or webb weights be used?
+//'  For rademacher weights, set 'type = 0'. For webb weights, set 'type = 1'.
 //' @param cluster: Integer Vector. Contains information on the clusters.
-//' @return A matrix of bootstrapped t-statistics, where the null is imposed on the bootstrap dgp.
+//' @return A matrix of bootstrapped t-statistics, where the null is 
+//' imposed on the bootstrap dgp.
+//' @noRd
+
 
 // [[Rcpp::export]]
 List wildboottestCL(const arma::vec & y,
@@ -233,88 +211,222 @@ List wildboottestCL(const arma::vec & y,
                     const int & type,
                     const arma::vec & cluster, 
                     const double & small_sample_correction) {
-
+  
   // function implements wild cluster bootstrap,
   // imposing the null
-
+  
   int n = X.n_rows;
   int k = X.n_cols;
-
+  
   // impose null on the bootstrap dgp
   arma::mat XXinv = (X.t() * X ).i();
   arma::mat beta = XXinv * (X.t() * y);
-
+  
   // calculate beta constrained
-  arma::vec beta_r = beta - XXinv * R * (R.t() * XXinv * R).i() * (R.t() * beta - r);
+  arma::vec beta_r = beta - XXinv * R * (R.t() * XXinv * R).i() 
+    * (R.t() * beta - r);
   arma::vec yhat_r = X * beta_r;
   arma::vec resid_r = y - yhat_r;
-
-  arma::mat t_boot(k, B + 1);
-
+  
+  arma::vec t_boot(B + 1);
+  
 #pragma omp parallel for num_threads(cores)
   for(int b = 1; b < B + 1; b++){
-
+    
     // create bootstrap sample
     arma::vec y_boot(n);
     for(int g = 0; g < N_G_bootcluster; g++){
-      y_boot(find(cluster == g)) = yhat_r(find(cluster == g)) + resid_r(find(cluster == g)) * sample_weights(1, type);
+      y_boot(find(cluster == g)) = yhat_r(find(cluster == g)) + 
+        resid_r(find(cluster == g)) * sample_weights(1, type);
     }
-
+    
     // get bootstrapped coefs and resids
     arma::vec coef_boot = XXinv * (X.t() * y_boot) ;
     arma::vec resid_boot = y_boot - X * coef_boot;
-
+    
     // calculate CR vcov
     arma::mat meat(k, k);
-
+    
     // for all g = 1,..., G clusters
-    //for(int g = 0; g < G; g++){
-    //arma::mat meat_g(k, k);
     for(int n_g = 0; n_g < N_G_bootcluster; n_g++){
       arma::mat X_ng = X.rows(find(cluster == n_g));
       arma::mat resid_boot_ng = resid_boot(find(cluster == n_g));
-      //meat +=  vcov_sign(g) * small_sample_correction(g) * X_ng.t() * resid_boot_ng * resid_boot_g.t() * X_ng;
       meat += X_ng.t() * resid_boot_ng * resid_boot_ng.t() * X_ng;
     }
-    //meat += meat_g;
-    //}
-
+    
     arma::mat sigma_boot =  (XXinv * meat * XXinv);
-
+    
     // calculate t-stats
-    t_boot.col(b) = coef_boot / arma::sqrt(small_sample_correction * arma::diagvec(sigma_boot));
+    t_boot(b) = arma::as_scalar((R.t() * coef_boot - r) / 
+      arma::sqrt(small_sample_correction * (R.t() * sigma_boot * R)));
+    
   }
-
+  
   // for b = 0
   // create bootstrap sample
   arma::vec y_boot(n);
   for(int n_g = 0; n_g < N_G_bootcluster; n_g++){
-    y_boot(find(cluster == n_g)) = yhat_r(find(cluster == n_g)) + resid_r(find(cluster == n_g)) ;
+    y_boot(find(cluster == n_g)) = yhat_r(find(cluster == n_g)) + 
+      resid_r(find(cluster == n_g)) ;
   }
-
+  
   // get bootstrapped coefs and resids
   arma::vec coef_boot = XXinv * (X.t() * y_boot) ;
   arma::vec resid_boot = y_boot - X * coef_boot;
-
+  
   // calculate CR vcov
   arma::mat meat(k, k);
   //for(int g = 0; g < G; g++){
   for(int n_g = 0; n_g < N_G_bootcluster; n_g++){
     arma::mat X_ng = X.rows(find(cluster == n_g));
     arma::mat resid_boot_ng = resid_boot(find(cluster == n_g));
-    //meat +=  vcov_sign(g) * small_sample_correction(g) * X_ng.t() * resid_boot_ng * resid_boot_g.t() * X_ng;
     meat += X_ng.t() * resid_boot_ng * resid_boot_ng.t() * X_ng;
   }
   //meat += meat_g;
   //}
   arma::mat sigma_boot =   (XXinv * meat * XXinv);
-
+  
   // calculate t-stats
-  t_boot.col(0) = coef_boot / arma::sqrt(small_sample_correction * arma::diagvec(sigma_boot));
-
+  t_boot(0) = arma::as_scalar((R.t() * coef_boot - r) / 
+    arma::sqrt(small_sample_correction * (R.t() * sigma_boot * R)));
+  
   List res;
   res["t_boot"] = t_boot;
-
+  
   return res;
-
+  
 }
+
+
+
+//' Implementation of the wild  cluster bootstrap. Computes
+//' cluster robust variance estimators. For use in fwildclusterboot when
+//' the memory demands of the fast and wild algorithm are infeasible
+//' @param y A vector - the dependent variable
+//' @param X A matrix - the design matrix
+//' @param R A matrix - the constraints matrix for a hypothesis test R'beta = r.
+//' @param r A vector - r in hypothesis test R'beta = r.
+//' @param B An integer - controls the number of bootstrap iterations.
+//' @param N_G_bootcluster - The number of bootstrap clusters.
+//' @param cores Integer: the number of cores to be used.
+//' @param cluster: Integer Vector. Contains information on the clusters.
+//' @param v: enumerated weights matrix 
+//' @return A matrix of bootstrapped t-statistics, where the null is
+//'  imposed on the bootstrap dgp.
+//' @noRd
+
+
+// [[Rcpp::export]]
+List wildboottestCL_enum(const arma::vec & y,
+                         const arma::mat & X,
+                         const arma::mat & R,
+                         const double & r,
+                         const int & B,
+                         const int & N_G_bootcluster,
+                         const int & cores,
+                         const arma::vec & cluster, 
+                         const double & small_sample_correction, 
+                         const arma::mat & v) {
+  
+  // function implements wild cluster bootstrap,
+  // imposing the null
+  
+  
+  // int B = v.n_rows; 
+  // int N_G_bootcluster = v.n_cols; 
+  
+  int n = X.n_rows;
+  int k = X.n_cols;
+  
+  // impose null on the bootstrap dgp
+  arma::mat XXinv = (X.t() * X ).i();
+  arma::mat beta = XXinv * (X.t() * y);
+  
+  // calculate beta constrained
+  arma::vec beta_r = beta - XXinv * R * (R.t() * XXinv * R).i()
+    * (R.t() * beta - r);
+  arma::vec yhat_r = X * beta_r;
+  arma::vec resid_r = y - yhat_r;
+  
+  arma::vec t_boot(B + 1);
+  
+  
+#pragma omp parallel for num_threads(cores)
+  for(int b = 1; b < B + 1; b++){
+    
+    // create bootstrap sample
+    arma::vec y_boot(n);
+    for(int g = 0; g < N_G_bootcluster; g++){
+      y_boot(find(cluster == g)) = yhat_r(find(cluster == g)) +
+        resid_r(find(cluster == g)) * v(b, g);
+    }
+    
+    // get bootstrapped coefs and resids
+    arma::vec coef_boot = XXinv * (X.t() * y_boot) ;
+    arma::vec resid_boot = y_boot - X * coef_boot;
+    
+    // calculate CR vcov
+    arma::mat meat(k, k);
+    
+    // for all g = 1,..., G clusters
+    for(int n_g = 0; n_g < N_G_bootcluster; n_g++){
+      arma::mat X_ng = X.rows(find(cluster == n_g));
+      arma::mat resid_boot_ng = resid_boot(find(cluster == n_g));
+      meat += X_ng.t() * resid_boot_ng * resid_boot_ng.t() * X_ng;
+    }
+    
+    arma::mat sigma_boot =  (XXinv * meat * XXinv);
+    
+    // calculate t-stats
+    t_boot(b) = arma::as_scalar((R.t() * coef_boot - r) / 
+      arma::sqrt(small_sample_correction * (R.t() * sigma_boot * R)));
+    
+  }
+  
+  
+  
+  // for b = 0
+  // create bootstrap sample
+  arma::vec y_boot(n);
+  for(int n_g = 0; n_g < N_G_bootcluster; n_g++){
+    y_boot(find(cluster == n_g)) = yhat_r(find(cluster == n_g)) + 
+      resid_r(find(cluster == n_g)) ;
+  }
+  
+  // get bootstrapped coefs and resids
+  arma::vec coef_boot = XXinv * (X.t() * y_boot) ;
+  arma::vec resid_boot = y_boot - X * coef_boot;
+  
+  // calculate CR vcov
+  arma::mat meat(k, k);
+  //for(int g = 0; g < G; g++){
+  for(int n_g = 0; n_g < N_G_bootcluster; n_g++){
+    arma::mat X_ng = X.rows(find(cluster == n_g));
+    arma::mat resid_boot_ng = resid_boot(find(cluster == n_g));
+    meat += X_ng.t() * resid_boot_ng * resid_boot_ng.t() * X_ng;
+  }
+  //meat += meat_g;
+  //}
+  arma::mat sigma_boot =   (XXinv * meat * XXinv);
+  
+  // calculate t-stats
+  t_boot(0) = arma::as_scalar((R.t() * coef_boot - r) / 
+    arma::sqrt(small_sample_correction * (R.t() * sigma_boot * R)));
+  
+  
+  // collect results  
+  List res;
+  res["t_boot"] = t_boot;
+  res["B"] = B; 
+  res["N_G_bootcluster"] = N_G_bootcluster; 
+  res["v"] = v; 
+  res["resid_r"] = r; 
+  
+  
+  return res;
+  
+}
+
+
+
+

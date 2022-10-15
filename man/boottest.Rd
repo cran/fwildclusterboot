@@ -21,31 +21,83 @@ the fast wild bootstrap algorithm developed in Roodman et al., 2019.
 }
 \section{Setting Seeds}{
 
-To guarantee reproducibility, you can either use \verb{boottest()'s} \code{seed} function argument, or
+To guarantee reproducibility, you can either use \verb{boottest()'s} \code{seed}
+function argument, or
 set a global random seed via
 \itemize{
 \item \code{set.seed()} when using
 \enumerate{
-\item the lean algorithm (via \code{boot_algo = "R-lean"}), 2) the heteroskedastic wild bootstrap
-\item the wild cluster bootstrap via \code{boot_algo = "R"} with Mammen weights or 4) \code{boot_algo = "WildBootTests.jl"}
+\item the lean algorithm (via \code{engine = "R-lean"}), 2) the heteroskedastic
+wild bootstrap
+\item the wild cluster bootstrap via \code{engine = "R"} with Mammen weights
+or 4) \code{engine = "WildBootTests.jl"}
 }
-\item \code{dqrng::dqset.seed()} when using \code{boot_algo = "R"} for Rademacher, Webb or Normal weights
+\item \code{dqrng::dqset.seed()} when using \code{engine = "R"} for Rademacher, Webb
+or Normal weights
 }
 }
 
+\examples{
+requireNamespace("fwildclusterboot")
+data(voters)
+lm_fit <- lm(
+  proposition_vote ~ treatment + ideology1 + log_income + Q1_immigration,
+  data = voters
+)
+boot <- boottest(lm_fit,
+  B = 9999,
+  param = "treatment",
+  clustid = "group_id1"
+)
+summary(boot)
+print(boot)
+plot(boot)
+nobs(boot)
+pval(boot)
+confint(boot)
+generics::tidy(boot)
+
+}
 \references{
 Roodman et al., 2019, "Fast and wild: Bootstrap inference in
 STATA using boottest", The STATA Journal.
-(\url{https://journals.sagepub.com/doi/full/10.1177/1536867X19830877})
+(\url{https://ideas.repec.org/p/qed/wpaper/1406.html})
 
-Cameron, A. Colin, Jonah B. Gelbach, and Douglas L. Miller. "Bootstrap-based improvements for inference with clustered errors." The Review of Economics and Statistics 90.3 (2008): 414-427.
+MacKinnon, James G., Morten Ørregaard Nielsen, and
+Matthew D. Webb. Fast and reliable jackknife and bootstrap
+methods for cluster-robust inference. No. 1485. 2022.
 
-MacKinnon, James G., and Matthew D. Webb. "The wild bootstrap for few (treated) clusters." The Econometrics Journal 21.2 (2018): 114-135.
+Cameron, A. Colin, Jonah B. Gelbach, and Douglas L. Miller.
+"Bootstrap-based improvements for inference with clustered errors."
+The Review of Economics and Statistics 90.3 (2008): 414-427.
 
-MacKinnon, James. "Wild cluster bootstrap confidence intervals." L'Actualite economique 91.1-2 (2015): 11-33.
+Cameron, A.Colin & Douglas L. Miller.
+"A practitioner's guide to cluster-robust inference"
+Journal of Human Resources (2015) \doi{doi:10.3368/jhr.50.2.317}
 
-Webb, Matthew D. Reworking wild bootstrap based inference for clustered errors. No. 1315. Queen's Economics Department Working Paper, 2013.
+Davidson & MacKinnon. "Wild Bootstrap Tests for IV regression"
+Journal of Economics and Business Statistics (2010)
+\doi{https://doi.org/10.1198/jbes.2009.07221}
+
+MacKinnon, James G., and Matthew D. Webb.
+"The wild bootstrap for few (treated) clusters."
+The Econometrics Journal 21.2 (2018): 114-135.
+
+MacKinnon, James G., and Matthew D. Webb.
+"Cluster-robust inference: A guide to empirical practice"
+Journal of Econometrics (2022)
+\doi{https://doi.org/10.1016/j.jeconom.2022.04.001}
+
+MacKinnon, James. "Wild cluster bootstrap confidence intervals."
+L'Actualite economique 91.1-2 (2015): 11-33.
+
+Webb, Matthew D.
+"Reworking wild bootstrap based inference for clustered errors"
+. No. 1315. Queen's Economics Department Working Paper, 2013.
 }
 \seealso{
-\link[fwildclusterboot]{boottest.lm}, \link[fwildclusterboot]{boottest.fixest}, \link[fwildclusterboot]{boottest.felm}, \link[fwildclusterboot]{boottest.ivreg}
+\link[=boottest.lm]{boottest.lm},
+\link[=boottest.fixest]{boottest.fixest},
+\link[=boottest.felm]{boottest.felm},
+\link[=boottest.ivreg]{boottest.ivreg}
 }

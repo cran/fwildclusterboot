@@ -1,3 +1,108 @@
+# fwildclusterboot 0.12
+
+This is the first CRAN release since version `0.9`. It comes with a set of new features, but also potentially breaking changes. This section summarizes all developments since version `0.9`. 
+
+### Potentially breaking changes: 
+* `boottest()'s` function argument `boot_algo` has been renamed to `engine`
+* the `setBoottest_boot_algo()` function was renamed to `setBoottest_engine()`
+
+### Bug fixes and internal changes
+
+* When a multi-parameter hypothesis of the form R beta = r was tested, the *heteroskedastic* wild bootstrap would nevertheless always test 
+"beta_k = 0" vs "beta_k != 0", with "beta_k = param". I am sorry for that bug!
+* The `Matrix.utils` package is at danger of CRAN removal - it has been replaced by custom functions for internal use.
+
+### New features and Improvements
+
++ A new function argument has been added - `bootstrap_type`. In combination with the `impose_null` function argument, it allows to choose between different cluster bootstrap types - WCx11, WCx13, WCx31, WCx33. For more details on these methods, see the working paper by [MacKinnon, Nielsen & Webb (2022)](https://www.econ.queensu.ca/sites/econ.queensu.ca/files/wpaper/qed_wp_1485.pdf). Currently, these new bootstrap types only compute p-values. Adding support for confidence intervals is work in progress.
++ A `boot_aggregate()` method now supports the aggregation of coefficients in staggered difference-in-differences following the methods by [Sun & Abraham (2021, Journal of Econometrics)](https://arxiv.org/pdf/1804.05785.pdf) in combination with the `sunab()` function from [`fixest`](https://lrberge.github.io/fixest/reference/sunab.html)has been added. Essentially, `boot_aggregate()` is a copy of [`aggregate.fixest`](https://lrberge.github.io/fixest/reference/aggregate.fixest.html): the only difference is that inference is powered by a wild bootstrap.
++ The heteroskedastic bootstrap is now significantly faster, and WCR21 and WCR31 versions are now supported (i.e. HC2 and HC3 'imposed' on the bootstrap dgp.)
+
+
+# fwildclusterboot 0.11.3 
+
++ significant speed improvements for the heteroskedastic bootstrap
+
+
+# fwildclusterboot 0.11.2 
+
++ significant speed improvements for the x1 bootstrap algorithms,
+  `bootstrap_type %in% c("11", "31")`, both for WCR and WCU
+
+# fwildclusterboot 0.11.1 
+
+### New bootstrap algorithms following MNW (2022)
+
++ A new function argument has been added - `bootstrap_type`. In combination with the `impose_null` function argument, it allows to choose between different cluster bootstrap types - WCx11, WCx13, WCx31, WCx33. For more details on these methods, see the working paper by [MacKinnon, Nielsen & Webb (2022)](https://www.econ.queensu.ca/sites/econ.queensu.ca/files/wpaper/qed_wp_1485.pdf).
+
+### `boot_aggregate()` method for Sun-Abrahams Event Studies
+
+A `boot_aggregate()` method to supports the aggregation of coefficients in staggered difference-in-differences following the methods by [Sun & Abraham (2021, Journal of Econometrics)](https://arxiv.org/pdf/1804.05785.pdf) in combination with the `sunab()` function from [`fixest`](https://lrberge.github.io/fixest/reference/sunab.html)has been added. Essentially, `boot_aggregate()` is a copy of [`aggregate.fixest`](https://lrberge.github.io/fixest/reference/aggregate.fixest.html): the only difference is that inference is powered by a wild bootstrap.
+
+### Other syntax changes, potentially breaking! 
+
++ The `boot_algo` function argument has been renamed to `engine`.
++ The `setBoottest_boot_algo()` function has been renamed to `setBoottest_engine()`.
+In consequence, the syntax introduced in 0.11 changes to 
+
+
+```
+boottest(
+  lm_fit, 
+  param = ~treatment, 
+  clustid = ~group_id1,
+  B = 9999, 
+  impose_null = TRUE,
+  engine = "R", 
+  bootstrap_type = "11"
+)
+```
+
+To run everything through `WildBootTests.jl`, you would have to specify 
+
+```
+boottest(
+  lm_fit, 
+  param = ~treatment, 
+  clustid = ~group_id1,
+  B = 9999, 
+  impose_null = TRUE,
+  engine = "WildBootTests.jl", 
+  bootstrap_type = "11"
+)
+```
+
+
+# fwildclusterboot 0.11
+
++ This release introduces new wild cluster bootstrap variants as described in [MacKinnon, Nielsen & Webb (2022)](https://www.econ.queensu.ca/sites/econ.queensu.ca/files/wpaper/qed_wp_1485.pdf). The implementation is still quite bare-bone: it only allows to test hypotheses of the form $\beta_k = 0$ vs $\beta_k \neq 0$, does not allow for regression weights or fixed effects, and further does not compute confidence intervals. 
+
+You can run one of the 'new' variants - e.g. the "WCR13", by specifying the `bootstrap_type` function argument accordingly: 
+
+```
+boottest(
+  lm_fit, 
+  param = ~treatment, 
+  clustid = ~group_id1,
+  B = 9999, 
+  impose_null = TRUE,
+  engine = "R", 
+  bootstrap_type = "31"
+)
+```
+
+
+# fwildclusterboot 0.10
+
++ introduces a range of new methods: `nobs()`, `pval()`, `teststat()`, `confint()` and `print()`
++ multiple (internal) changes for ropensci standards alignment
++ drop the `t_boot` (`teststat_boot`) function arguments -> they are now
+  TRUE by default
++ fix a bug in the lean algorithms - it always tested hypotheses of the form 
+  beta = 0 instead of R'beta = r, even when R != 1 and r != 0
++ enable full enumeration for R-lean tests 
++ enable deterministic 'full enumeration tests' - these are exact
+
 # fwildclusterboot 0.9
 
 + v0.9 moves data pre-processing from `model.frame` methods to `model_matrix` methods. I had wanted to do so for a while, but issue #42, as raised by Michael Topper, has finally convinced me to start working on this project. 
@@ -88,7 +193,7 @@ boot_lm <- boottest(
 library(ivreg)
 data("SchoolingReturns", package = "ivreg")
 # drop all NA values from SchoolingReturns
-SchoolingReturns <- SchoolingReturns[rowMeans(sapply(SchoolingReturns, is.na)) == 0,]
+SchoolingReturns <- na.omit(SchoolingReturns)
 ivreg_fit <- ivreg(log(wage) ~ education + age + ethnicity + smsa + south + parents14 |
                            nearcollege + age  + ethnicity + smsa + south + parents14, data = SchoolingReturns)
 
