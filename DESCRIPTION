@@ -1,6 +1,6 @@
 Package: fwildclusterboot
 Title: Fast Wild Cluster Bootstrap Inference for Linear Models
-Version: 0.12
+Version: 0.12.1
 Authors@R: 
     c(
     person(given = "Alexander",
@@ -64,10 +64,16 @@ RoxygenNote: 7.2.1
 LinkingTo: Rcpp,RcppArmadillo, RcppEigen
 VignetteBuilder: knitr
 Language: en-US
-SystemRequirements: Julia (>= 1.7), WildBootTests.jl (>=0.8.1)
+SystemRequirements: Version Requirements to run the wild bootstrap
+        through Julia - Julia (>= 1.7), WildBootTests.jl (>=0.8.1).
+        Julia is downloadable via the official Julia website
+        (https://julialang.org/downloads/), WildBootTests.jl via
+        Julia's package manager
+        (https://docs.julialang.org/en/v1/stdlib/Pkg/) or its github
+        repository (https://github.com/droodman/WildBootTests.jl)
 Config/testthat/edition: 3
 NeedsCompilation: yes
-Packaged: 2022-10-13 08:43:37 UTC; alexa
+Packaged: 2022-11-20 09:13:29 UTC; alexa
 Author: Alexander Fischer [aut, cre],
   David Roodman [aut],
   Achim Zeileis [ctb] (Author of included sandwich fragments),
@@ -77,4 +83,4 @@ Author: Alexander Fischer [aut, cre],
   Sebastian Krantz [ctb]
 Maintainer: Alexander Fischer <alexander-fischer1801@t-online.de>
 Repository: CRAN
-Date/Publication: 2022-10-15 23:02:34 UTC
+Date/Publication: 2023-01-23 14:00:06 UTC

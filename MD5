@@ -1,6 +1,6 @@
-18725cfcf12e24feb12f68559122cd1d *DESCRIPTION
+ef04c1bb833bb9c86ba245f45ffd7dc5 *DESCRIPTION
 477672c17b66671216016cc6f64103a5 *NAMESPACE
-c8a48f24482085e2efd31f42ce88bc0a *NEWS.md
+b6d564ff25435bf2a1897674aa54cc50 *NEWS.md
 eb206de9783c3deb9c5b4061053d544a *R/RcppExports.R
 1796cdb1d11f23a455caf3df8f235a0f *R/arg_checks.R
 e51b9f12c650089cb7e7f1e91fc8c207 *R/boot_aggregate.R
@@ -34,7 +34,7 @@ e03a97319bf1329a605efb8c7712f817 *R/model_matrix.R
 b35d22e2716f0a14d75687d2718e2feb *R/srr-stats-standards.R
 f1e2951d360814574da1b5b36d1a0d4b *R/utils.R
 30d36ce586861951ce1439b3e51ca46d *R/voters-data.R
-f45e3a21256f525fc915beb49d779d1c *README.md
+e494548b7cf34ed0484330e6c9295cd0 *README.md
 afbe4209b3bb961ba3e41cbfe79ea507 *build/partial.rdb
 60c01bf0ba36e3636c2ce9d48c41e6a9 *build/vignette.rds
 c299622a0757afc833a0523f30c2bf62 *data/voters.RData
@@ -100,7 +100,7 @@ aab6dcc4ea6f7860449ac3a74792e2a1 *tests/testthat/test-error_warning.R
 456324ac4f07d92e9b5529c6eac51986 *tests/testthat/test-full-enumeration.R
 0ae48bd9b29cfaa7a75cf94704073876 *tests/testthat/test-global_vars.R
 cfad2cae40243d98c8a8b99f17bd36ec *tests/testthat/test-method_equivalence.R
-15547003090b6551b6f5247ed6525e61 *tests/testthat/test-new-bootstrap-variants.R
+ee13ffe8359b88cbcbf89462c550b895 *tests/testthat/test-new-bootstrap-variants.R
 96c474625cb567ea964078a6bb7981b7 *tests/testthat/test-r-lean.R
 e831722b95607eb641ceb378d5cd5ec7 *tests/testthat/test-r-vs-julia.R
 298257055550899bfdca080562105a41 *tests/testthat/test-seed.R
