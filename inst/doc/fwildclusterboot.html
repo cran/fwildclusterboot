@@ -644,7 +644,21 @@ tested</li>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">clustid =</span> <span class="st">&quot;group_id1&quot;</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">param =</span> <span class="st">&quot;treatment&quot;</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> <span class="dv">9999</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Please note that the seeding behavior for random number generation for</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `boottest()` has changed with `fwildclusterboot` version 0.13.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; It will no longer be possible to exactly reproduce results produced by versions</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lower than 0.13.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; If your prior results were produced under sufficiently many bootstrap</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; iterations, none of your conclusions will change.  For more details about this</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; change, please read the notes in</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [news.md](https://cran.r-project.org/web/packages/fwildclusterboot/news/news.html).</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This warning is displayed once per session.</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Too guarantee reproducibility, don&#39;t forget to set a global random seed</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; **both** via `set.seed()` and `dqrng::dqset.seed()`.</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This message is displayed once every 8 hours.</span></span></code></pre></div>
 <p>To tests for an interaction, it is important to use the coefficient
 names that are internally created by the modeling function.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#names(coef(lm_fit_interact))</span></span>
@@ -1302,7 +1316,10 @@ of binary regressors.</p>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fe =</span> <span class="st">&quot;Q1_immigration&quot;</span></span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required namespace: fixest</span></span></code></pre></div>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required namespace: fixest</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Too guarantee reproducibility, don&#39;t forget to set a global random seed</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; **both** via `set.seed()` and `dqrng::dqset.seed()`.</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This message is displayed once every 8 hours.</span></span></code></pre></div>
 </div>
 <div id="the-subcluster-bootstrap" class="section level2">
 <h2>The Subcluster Bootstrap</h2>
@@ -1781,12 +1798,20 @@ memory-efficient.</p>
 </div>
 <div id="seeds" class="section level2">
 <h2>Seeds</h2>
-<p>For Rademacher, Normal and Webb weights and
-<code>engine = &quot;R&quot;</code>, you need to set a global seed via
-<code>dqrng::dqset.seed()</code>. For all other options - Mammen weights
-with <code>engine = &quot;R&quot;</code>, <code>engine = &quot;R-lean&quot;</code> or
-<code>engine = &quot;WildBootTests.jl&quot;</code>, you can set a global seed via
-the familiar<code>set.seed()</code>.</p>
+<p>To guarantee reproducibility, you need to set a global random seed
+via</p>
+<ul>
+<li><code>set.seed()</code> when using
+<ol style="list-style-type: decimal">
+<li>the lean algorithm (via <code>engine = &quot;R-lean&quot;</code>),</li>
+<li>the heteroskedastic wild bootstrap</li>
+<li>the wild cluster bootstrap via <code>engine = &quot;R&quot;</code> with Mammen
+weights or</li>
+<li><code>engine = &quot;WildBootTests.jl&quot;</code></li>
+</ol></li>
+<li><code>dqrng::dqset.seed()</code> when using
+<code>engine = &quot;R&quot;</code> for Rademacher, Webb or Normal weights</li>
+</ul>
 </div>
 <div id="treatment-of-invalid-test-statistics-for-multiway-clustering" class="section level2">
 <h2>Treatment of Invalid Test Statistics for multiway clustering</h2>

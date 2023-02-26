@@ -1,6 +1,6 @@
 Package: fwildclusterboot
 Title: Fast Wild Cluster Bootstrap Inference for Linear Models
-Version: 0.12.1
+Version: 0.13.0
 Authors@R: 
     c(
     person(given = "Alexander",
@@ -45,7 +45,7 @@ Description: Implementation of fast algorithms for wild cluster bootstrap
              (from package 'fixest') and 'felm()' (from package 'lfe'). 
              Additionally implements a 'heteroskedasticity-robust' ('HC1') wild 
              bootstrap.
-             Further, the package provides an R binding to 'WildBootTests.jl',
+             Last, the package provides an R binding to 'WildBootTests.jl',
              which provides additional speed gains and functionality, 
              including the 'WRE' bootstrap for instrumental variable models 
              (based on models of type 'ivreg()' from package 'ivreg')
@@ -54,7 +54,7 @@ URL: https://s3alfisc.github.io/fwildclusterboot/
 BugReports: https://github.com/s3alfisc/fwildclusterboot/issues/
 License: GPL-3
 Imports: collapse, dreamerr, Formula, generics, dqrng, gtools, Matrix,
-        JuliaConnectoR, MASS, Rcpp, summclust
+        JuliaConnectoR, MASS, Rcpp, summclust, rlang
 Suggests: fixest, lfe, ivreg, clubSandwich, lmtest, data.table,
         fabricatr, covr, knitr, rmarkdown, broom, modelsummary, bench,
         testthat (>= 3.0.0), tibble, sandwich
@@ -65,15 +65,15 @@ LinkingTo: Rcpp,RcppArmadillo, RcppEigen
 VignetteBuilder: knitr
 Language: en-US
 SystemRequirements: Version Requirements to run the wild bootstrap
-        through Julia - Julia (>= 1.7), WildBootTests.jl (>=0.8.1).
-        Julia is downloadable via the official Julia website
+        through Julia - Julia (>= 1.8), WildBootTests.jl (>=0.9). Julia
+        is downloadable via the official Julia website
         (https://julialang.org/downloads/), WildBootTests.jl via
         Julia's package manager
         (https://docs.julialang.org/en/v1/stdlib/Pkg/) or its github
         repository (https://github.com/droodman/WildBootTests.jl)
 Config/testthat/edition: 3
 NeedsCompilation: yes
-Packaged: 2022-11-20 09:13:29 UTC; alexa
+Packaged: 2023-02-25 15:11:24 UTC; alexa
 Author: Alexander Fischer [aut, cre],
   David Roodman [aut],
   Achim Zeileis [ctb] (Author of included sandwich fragments),
@@ -83,4 +83,4 @@ Author: Alexander Fischer [aut, cre],
   Sebastian Krantz [ctb]
 Maintainer: Alexander Fischer <alexander-fischer1801@t-online.de>
 Repository: CRAN
-Date/Publication: 2023-01-23 14:00:06 UTC
+Date/Publication: 2023-02-26 01:00:13 UTC

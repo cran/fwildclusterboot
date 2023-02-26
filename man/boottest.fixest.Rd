@@ -13,7 +13,6 @@
   fe = NULL,
   sign_level = 0.05,
   conf_int = TRUE,
-  seed = NULL,
   R = NULL,
   r = 0,
   beta0 = NULL,
@@ -23,6 +22,7 @@
   p_val_type = "two-tailed",
   tol = 1e-06,
   maxiter = 10,
+  sampling = "dqrng",
   nthreads = getBoottest_nthreads(),
   ssc = boot_ssc(adj = TRUE, fixef.K = "none", cluster.adj = TRUE, cluster.df =
     "conventional"),
@@ -76,8 +76,6 @@ returns 0.95\% confidence intervals. By default, sign_level = 0.05.}
 \item{conf_int}{A logical vector. If TRUE, boottest computes confidence
 intervals by test inversion. If FALSE, only the p-value is returned.}
 
-\item{seed}{An integer. Allows to set a random seed. For details, see below.}
-
 \item{R}{Hypothesis Vector giving linear combinations of coefficients.
 Must be either NULL or a vector of the same length as \code{param}. If NULL,
 a vector of ones of length param.}
@@ -122,6 +120,13 @@ the confidence interval.
 \item{maxiter}{Integer. Maximum number of iterations used in the root
 finding procedure to find the confidence interval.
 10 by default.}
+
+\item{sampling}{'dqrng' or 'standard'. If 'dqrng', the 'dqrng' package is
+used for random number generation (when available). If 'standard',
+functions from the 'stats' package are used when available.
+This argument is mostly a convenience to control random number generation in
+a wrapper package around \code{fwildclusterboot}, \code{wildrwolf}.
+I recommend to use the fast' option.}
 
 \item{nthreads}{The number of threads. Can be: a) an integer lower than,
 or equal to, the maximum number of threads; b) 0: meaning
@@ -196,20 +201,16 @@ interval.}
 \item{call}{Function call of boottest.}
 \item{engine}{The employed bootstrap algorithm.}
 \item{nthreads}{The number of threads employed.}
-\item{internal_seed}{The integer value -inherited from set.seed() -
-used within boottest() to set the random seed in either R or Julia.
-If NULL, no internal seed was created.}
 }
 \description{
 \code{boottest.fixest} is a S3 method that allows for fast wild cluster
 bootstrap inference for objects of class fixest by  implementing
-the fast wild bootstrap algorithm developed in Roodman et al., 2019 and
-implemented in the STATA package \code{boottest}.
+fast wild bootstrap algorithms as developed in Roodman et al., 2019
+and MacKinnon, Nielsen & Webb (2022).
 }
 \section{Setting Seeds}{
 
-To guarantee reproducibility, you can either use \verb{boottest()'s} \code{seed}
-function argument, or
+To guarantee reproducibility, you need to
 set a global random seed via
 \itemize{
 \item \code{set.seed()} when using
@@ -246,6 +247,17 @@ stops the procedure after 10 iterations.
 \code{boottest} does not calculate standard errors.
 }
 
+\section{Stata, Julia and Python Implementations}{
+
+The fast wild cluster bootstrap algorithms are further implemented in the
+following software packages:
+\itemize{
+\item Stata:\href{https://github.com/droodman/boottest}{boottest}
+\item Julia:\href{https://github.com/droodman/WildBootTests.jl}{WildBootTests.jl}
+\item Python:\href{https://github.com/s3alfisc/wildboottest}{wildboottest}
+}
+}
+
 \examples{
 \dontrun{
 requireNamespace("fixest")
@@ -277,7 +289,6 @@ boot4 <- boottest(feols_fit,
   clustid = c("group_id1", "group_id2"),
   fe = "Q1_immigration",
   sign_level = 0.2,
-  seed = 8,
   r = 2
 )
 # test treatment + ideology1 = 2

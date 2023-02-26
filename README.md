@@ -49,8 +49,9 @@ with $B = 100.000$ iterations in less than a second!
 -   The wild cluster bootstrap for OLS (Cameron, Gelbach & Miller 2008,
     Roodman et al, 2019).
 -   Multiple new versions of the wild cluster bootstrap as described in
-    MacKinnon, Nielsen & Webb (2022), including the WCR13, WCR31, WCR33,
-    WCU13, WCU31 and WCU33.
+    MacKinnon, Nielsen & Webb (2022), including the WCR13 (WCR-V), WCR31
+    (WCR-S), WCR33 (WCR-B), WCU13 (WCU-V), WCU31 (WCU-S) and WCU33
+    (WCU-B).
 -   The subcluster bootstrap (MacKinnon and Webb 2018).
 -   Confidence intervals formed by inverting the test and iteratively
     searching for bounds.
@@ -73,10 +74,14 @@ Additional features are provided through `WildBootTests.jl`:
 
 ### Installation
 
-You can install compiled versions of`{fwildclusterboot}` from R-universe
-(compiled) or github by following one of the steps below:
+You can install compiled versions of`{fwildclusterboot}` from CRAN
+(compiled), R-universe (compiled) or github by following one of the
+steps below:
 
 ``` r
+# from CRAN 
+install.packages("fwildclusterboot")
+
 # from r-universe (windows & mac, compiled R > 4.0 required)
 install.packages('fwildclusterboot', repos ='https://s3alfisc.r-universe.dev')
 # dev version from github
@@ -103,10 +108,12 @@ data(voters)
 # fit the model via fixest::feols(), lfe::felm() or stats::lm()
 lm_fit <- lm(proposition_vote ~ treatment  + log_income + as.factor(Q1_immigration) + as.factor(Q2_defense), data = voters)
 # bootstrap inference via boottest()
-lm_boot <- boottest(lm_fit, clustid = c("group_id1"), B = 9999, param = "treatment", seed = 1)
+lm_boot <- boottest(lm_fit, clustid = c("group_id1"), B = 9999, param = "treatment")
+#> Too guarantee reproducibility, don't forget to set a global random seed
+#> **both** via `set.seed()` and `dqrng::dqset.seed()`.
+#> This message is displayed once every 8 hours.
 summary(lm_boot)
-#> boottest.lm(object = lm_fit, param = "treatment", B = 9999, clustid = c("group_id1"), 
-#>     seed = 1)
+#> boottest.lm(object = lm_fit, param = "treatment", B = 9999, clustid = c("group_id1"))
 #>  
 #>  Hypothesis: 1*treatment = 0
 #>  Observations: 300
@@ -116,7 +123,7 @@ summary(lm_boot)
 #>  Number of Clusters: 40
 #> 
 #>              term estimate statistic p.value conf.low conf.high
-#> 1 1*treatment = 0    0.079     3.983       0     0.04     0.118
+#> 1 1*treatment = 0    0.079     3.983   0.001    0.039     0.119
 ```
 
 ## Citation
@@ -136,7 +143,7 @@ citation("fwildclusterboot")
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Misc{,
-#>     title = {fwildclusterboot: Fast Wild Cluster Bootstrap Inference for Linear Regression Models (Version 0.12)},
+#>     title = {fwildclusterboot: Fast Wild Cluster Bootstrap Inference for Linear Regression Models (Version 0.12.4.3)},
 #>     author = {Alexander Fischer and David Roodman},
 #>     year = {2021},
 #>     url = {https://cran.r-project.org/package=fwildclusterboot},
